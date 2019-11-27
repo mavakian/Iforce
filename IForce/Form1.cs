@@ -16,5 +16,10 @@ namespace IForce
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Program.Connect(dView1);
+        }
     }
 }
