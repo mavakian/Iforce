@@ -33,8 +33,13 @@ namespace IForce
             dview1.DataSource = res;
 
         }
-
-
-
+               
     }
-}
+
+    class UpdateProperties
+    {
+        public UpdateProperties()
+        {
+
+        }
+    }
