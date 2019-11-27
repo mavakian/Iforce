@@ -10,21 +10,32 @@ using System.Windows.Forms;
 
 namespace IForce
 {
-    public partial class Form1 : Form
+    public partial class IForce : Form
     {
-        public Form1()
+        public IForce()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnLaunch_Click(object sender, EventArgs e)
         {
+            new UpdateProperties(tboxServer.Text,
+                                 tboxDb.Text,
+                                 tboxSQLUser.Text,
+                                 tboxPassword.Text,
+                                 tboxURL.Text,
+                                 tboxClientID.Text,
+                                 tboxSecret.Text,
+                                 tboxResultsID.Text,
+                                 tboxRevUser.Text);
             Program.Connect(dView1);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-            Program.Connect(dView1);
+            Program.Search(dView1);
         }
+
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace IForce
 {
-    partial class Form1
+    partial class IForce
     {
         /// <summary>
         /// Required designer variable.
@@ -28,15 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IForce));
+            this.btnLaunch = new System.Windows.Forms.Button();
             this.dView1 = new System.Windows.Forms.DataGridView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.tboxServer = new System.Windows.Forms.TextBox();
+            this.tboxDb = new System.Windows.Forms.TextBox();
+            this.tboxSQLUser = new System.Windows.Forms.TextBox();
+            this.tboxPassword = new System.Windows.Forms.TextBox();
+            this.tboxURL = new System.Windows.Forms.TextBox();
+            this.tboxClientID = new System.Windows.Forms.TextBox();
+            this.tboxSecret = new System.Windows.Forms.TextBox();
             this.lblServer = new System.Windows.Forms.Label();
             this.lblDatabase = new System.Windows.Forms.Label();
             this.lblSQLUser = new System.Windows.Forms.Label();
@@ -44,80 +45,81 @@
             this.lblIproURL = new System.Windows.Forms.Label();
             this.lblClient_id = new System.Windows.Forms.Label();
             this.lblClientSecret = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.tboxResultsID = new System.Windows.Forms.TextBox();
+            this.tboxRevUser = new System.Windows.Forms.TextBox();
             this.lblResultsID = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // btnLaunch
             // 
-            this.button1.Location = new System.Drawing.Point(2, 588);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(560, 131);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Kick the Tires...";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnLaunch.Location = new System.Drawing.Point(12, 242);
+            this.btnLaunch.Name = "btnLaunch";
+            this.btnLaunch.Size = new System.Drawing.Size(558, 94);
+            this.btnLaunch.TabIndex = 0;
+            this.btnLaunch.Text = "Kick the Tires...";
+            this.btnLaunch.UseVisualStyleBackColor = true;
+            this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
             // 
             // dView1
             // 
             this.dView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dView1.Location = new System.Drawing.Point(2, 242);
+            this.dView1.Location = new System.Drawing.Point(12, 342);
             this.dView1.Name = "dView1";
-            this.dView1.Size = new System.Drawing.Size(560, 340);
+            this.dView1.Size = new System.Drawing.Size(558, 185);
             this.dView1.TabIndex = 1;
             // 
-            // textBox1
+            // tboxServer
             // 
-            this.textBox1.Location = new System.Drawing.Point(155, 8);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(407, 20);
-            this.textBox1.TabIndex = 2;
+            this.tboxServer.Location = new System.Drawing.Point(155, 8);
+            this.tboxServer.Name = "tboxServer";
+            this.tboxServer.Size = new System.Drawing.Size(415, 20);
+            this.tboxServer.TabIndex = 2;
             // 
-            // textBox2
+            // tboxDb
             // 
-            this.textBox2.Location = new System.Drawing.Point(155, 34);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(407, 20);
-            this.textBox2.TabIndex = 3;
+            this.tboxDb.Location = new System.Drawing.Point(155, 34);
+            this.tboxDb.Name = "tboxDb";
+            this.tboxDb.Size = new System.Drawing.Size(415, 20);
+            this.tboxDb.TabIndex = 3;
             // 
-            // textBox3
+            // tboxSQLUser
             // 
-            this.textBox3.Location = new System.Drawing.Point(155, 60);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(407, 20);
-            this.textBox3.TabIndex = 4;
+            this.tboxSQLUser.Location = new System.Drawing.Point(155, 60);
+            this.tboxSQLUser.Name = "tboxSQLUser";
+            this.tboxSQLUser.Size = new System.Drawing.Size(415, 20);
+            this.tboxSQLUser.TabIndex = 4;
             // 
-            // textBox4
+            // tboxPassword
             // 
-            this.textBox4.Location = new System.Drawing.Point(155, 86);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(407, 20);
-            this.textBox4.TabIndex = 5;
+            this.tboxPassword.Location = new System.Drawing.Point(155, 86);
+            this.tboxPassword.Name = "tboxPassword";
+            this.tboxPassword.Size = new System.Drawing.Size(415, 20);
+            this.tboxPassword.TabIndex = 5;
             // 
-            // textBox5
+            // tboxURL
             // 
-            this.textBox5.Location = new System.Drawing.Point(155, 112);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(407, 20);
-            this.textBox5.TabIndex = 6;
+            this.tboxURL.Location = new System.Drawing.Point(155, 112);
+            this.tboxURL.Name = "tboxURL";
+            this.tboxURL.Size = new System.Drawing.Size(415, 20);
+            this.tboxURL.TabIndex = 6;
             // 
-            // textBox6
+            // tboxClientID
             // 
-            this.textBox6.Location = new System.Drawing.Point(155, 138);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(407, 20);
-            this.textBox6.TabIndex = 7;
+            this.tboxClientID.Location = new System.Drawing.Point(155, 138);
+            this.tboxClientID.Name = "tboxClientID";
+            this.tboxClientID.Size = new System.Drawing.Size(415, 20);
+            this.tboxClientID.TabIndex = 7;
             // 
-            // textBox7
+            // tboxSecret
             // 
-            this.textBox7.Location = new System.Drawing.Point(155, 164);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(407, 20);
-            this.textBox7.TabIndex = 8;
+            this.tboxSecret.Location = new System.Drawing.Point(155, 164);
+            this.tboxSecret.Name = "tboxSecret";
+            this.tboxSecret.Size = new System.Drawing.Size(415, 20);
+            this.tboxSecret.TabIndex = 8;
             // 
             // lblServer
             // 
@@ -182,19 +184,19 @@
             this.lblClientSecret.TabIndex = 15;
             this.lblClientSecret.Text = "Client _Secret";
             // 
-            // textBox8
+            // tboxResultsID
             // 
-            this.textBox8.Location = new System.Drawing.Point(155, 190);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(52, 20);
-            this.textBox8.TabIndex = 16;
+            this.tboxResultsID.Location = new System.Drawing.Point(155, 190);
+            this.tboxResultsID.Name = "tboxResultsID";
+            this.tboxResultsID.Size = new System.Drawing.Size(52, 20);
+            this.tboxResultsID.TabIndex = 16;
             // 
-            // textBox9
+            // tboxRevUser
             // 
-            this.textBox9.Location = new System.Drawing.Point(155, 216);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(407, 20);
-            this.textBox9.TabIndex = 17;
+            this.tboxRevUser.Location = new System.Drawing.Point(155, 216);
+            this.tboxRevUser.Name = "tboxRevUser";
+            this.tboxRevUser.Size = new System.Drawing.Size(415, 20);
+            this.tboxRevUser.TabIndex = 17;
             // 
             // lblResultsID
             // 
@@ -214,26 +216,35 @@
             this.label2.TabIndex = 19;
             this.label2.Text = "Review Username";
             // 
-            // button2
+            // btnSearch
             // 
-            this.button2.Location = new System.Drawing.Point(213, 191);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(66, 19);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "Search";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnSearch.Location = new System.Drawing.Point(213, 191);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(66, 19);
+            this.btnSearch.TabIndex = 20;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // Form1
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(12, 533);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(558, 185);
+            this.richTextBox1.TabIndex = 21;
+            this.richTextBox1.Text = "";
+            // 
+            // IForce
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(572, 723);
-            this.Controls.Add(this.button2);
+            this.ClientSize = new System.Drawing.Size(584, 723);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblResultsID);
-            this.Controls.Add(this.textBox9);
-            this.Controls.Add(this.textBox8);
+            this.Controls.Add(this.tboxRevUser);
+            this.Controls.Add(this.tboxResultsID);
             this.Controls.Add(this.lblClientSecret);
             this.Controls.Add(this.lblClient_id);
             this.Controls.Add(this.lblIproURL);
@@ -241,17 +252,18 @@
             this.Controls.Add(this.lblSQLUser);
             this.Controls.Add(this.lblDatabase);
             this.Controls.Add(this.lblServer);
-            this.Controls.Add(this.textBox7);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tboxSecret);
+            this.Controls.Add(this.tboxClientID);
+            this.Controls.Add(this.tboxURL);
+            this.Controls.Add(this.tboxPassword);
+            this.Controls.Add(this.tboxSQLUser);
+            this.Controls.Add(this.tboxDb);
+            this.Controls.Add(this.tboxServer);
             this.Controls.Add(this.dView1);
-            this.Controls.Add(this.button1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Controls.Add(this.btnLaunch);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "IForce";
+            this.Text = "IForce";
             ((System.ComponentModel.ISupportInitialize)(this.dView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -260,15 +272,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnLaunch;
         private System.Windows.Forms.DataGridView dView1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox tboxServer;
+        private System.Windows.Forms.TextBox tboxDb;
+        private System.Windows.Forms.TextBox tboxSQLUser;
+        private System.Windows.Forms.TextBox tboxPassword;
+        private System.Windows.Forms.TextBox tboxURL;
+        private System.Windows.Forms.TextBox tboxClientID;
+        private System.Windows.Forms.TextBox tboxSecret;
         private System.Windows.Forms.Label lblServer;
         private System.Windows.Forms.Label lblDatabase;
         private System.Windows.Forms.Label lblSQLUser;
@@ -276,11 +288,12 @@
         private System.Windows.Forms.Label lblIproURL;
         private System.Windows.Forms.Label lblClient_id;
         private System.Windows.Forms.Label lblClientSecret;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox tboxResultsID;
+        private System.Windows.Forms.TextBox tboxRevUser;
         private System.Windows.Forms.Label lblResultsID;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 
