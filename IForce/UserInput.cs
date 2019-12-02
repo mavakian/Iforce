@@ -19,8 +19,8 @@ namespace IForce
         public static string Client_ID { get; set; }
         public static string Client_Secret { get; set; }
         //Paths
-        public static string SourcePath { get; set; }  //This could be the integration directory
-        public static string OutputPath { get; set; } //This should be the case directory
+        public static string SourcePath { get; set; } = @"\\testing.local\dfs\SupportTestRacks\TST-SUPTRK012\output\"; //This could be the integration directory
+        public static string OutputPath { get; set; } //This should be the case directory 
         //Review
         public static int ResultsID { get; set; } = 1; //search resuts id from CaseDB.UserTables.SearchResultsUser[Dim_User.UserID]
         public static string ReviewUsername { get; set; }

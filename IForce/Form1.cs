@@ -19,21 +19,35 @@ namespace IForce
 
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-            new UpdateProperties(tboxServer.Text,
-                                 tboxDb.Text,
-                                 tboxSQLUser.Text,
-                                 tboxPassword.Text,
-                                 tboxURL.Text,
-                                 tboxClientID.Text,
-                                 tboxSecret.Text,
-                                 tboxResultsID.Text,
-                                 tboxRevUser.Text);
-            Program.Connect(dView1);
+            UpdateProperties SetInputs = new UpdateProperties();
+            if (SetInputs.UpdateUserInputs(tboxServer.Text,
+                               tboxDb.Text,
+                               tboxSQLUser.Text,
+                               tboxPassword.Text,
+                               tboxURL.Text,
+                               tboxClientID.Text,
+                               tboxSecret.Text,
+                               tboxResultsID.Text,
+                               tboxRevUser.Text) == true)
+            {
+                Program.Connect(dView1, rchTxtBx1);
+            };
+            
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            Program.Search(dView1);
+            UpdateProperties SetInputs = new UpdateProperties();
+            if (SetInputs.UpdateSearchInputs(tboxServer.Text,
+                               tboxDb.Text,
+                               tboxSQLUser.Text,
+                               tboxPassword.Text,
+                               tboxResultsID.Text) == true)
+                              
+            {
+                Program.Search(dView1);
+            };
+                   
         }
 
 

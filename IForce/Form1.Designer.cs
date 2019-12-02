@@ -50,15 +50,16 @@
             this.lblResultsID = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rchTxtBx1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dView1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLaunch
             // 
-            this.btnLaunch.Location = new System.Drawing.Point(12, 242);
+            this.btnLaunch.Location = new System.Drawing.Point(16, 298);
+            this.btnLaunch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnLaunch.Name = "btnLaunch";
-            this.btnLaunch.Size = new System.Drawing.Size(558, 94);
+            this.btnLaunch.Size = new System.Drawing.Size(744, 116);
             this.btnLaunch.TabIndex = 0;
             this.btnLaunch.Text = "Kick the Tires...";
             this.btnLaunch.UseVisualStyleBackColor = true;
@@ -67,179 +68,200 @@
             // dView1
             // 
             this.dView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dView1.Location = new System.Drawing.Point(12, 342);
+            this.dView1.Location = new System.Drawing.Point(16, 421);
+            this.dView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dView1.Name = "dView1";
-            this.dView1.Size = new System.Drawing.Size(558, 185);
+            this.dView1.Size = new System.Drawing.Size(744, 228);
             this.dView1.TabIndex = 1;
             // 
             // tboxServer
             // 
-            this.tboxServer.Location = new System.Drawing.Point(155, 8);
+            this.tboxServer.Location = new System.Drawing.Point(207, 10);
+            this.tboxServer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxServer.Name = "tboxServer";
-            this.tboxServer.Size = new System.Drawing.Size(415, 20);
+            this.tboxServer.Size = new System.Drawing.Size(552, 22);
             this.tboxServer.TabIndex = 2;
             // 
             // tboxDb
             // 
-            this.tboxDb.Location = new System.Drawing.Point(155, 34);
+            this.tboxDb.Location = new System.Drawing.Point(207, 42);
+            this.tboxDb.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxDb.Name = "tboxDb";
-            this.tboxDb.Size = new System.Drawing.Size(415, 20);
+            this.tboxDb.Size = new System.Drawing.Size(552, 22);
             this.tboxDb.TabIndex = 3;
             // 
             // tboxSQLUser
             // 
-            this.tboxSQLUser.Location = new System.Drawing.Point(155, 60);
+            this.tboxSQLUser.Location = new System.Drawing.Point(207, 74);
+            this.tboxSQLUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxSQLUser.Name = "tboxSQLUser";
-            this.tboxSQLUser.Size = new System.Drawing.Size(415, 20);
+            this.tboxSQLUser.Size = new System.Drawing.Size(552, 22);
             this.tboxSQLUser.TabIndex = 4;
             // 
             // tboxPassword
             // 
-            this.tboxPassword.Location = new System.Drawing.Point(155, 86);
+            this.tboxPassword.Location = new System.Drawing.Point(207, 106);
+            this.tboxPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxPassword.Name = "tboxPassword";
-            this.tboxPassword.Size = new System.Drawing.Size(415, 20);
+            this.tboxPassword.Size = new System.Drawing.Size(552, 22);
             this.tboxPassword.TabIndex = 5;
             // 
             // tboxURL
             // 
-            this.tboxURL.Location = new System.Drawing.Point(155, 112);
+            this.tboxURL.Location = new System.Drawing.Point(207, 138);
+            this.tboxURL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxURL.Name = "tboxURL";
-            this.tboxURL.Size = new System.Drawing.Size(415, 20);
+            this.tboxURL.Size = new System.Drawing.Size(552, 22);
             this.tboxURL.TabIndex = 6;
             // 
             // tboxClientID
             // 
-            this.tboxClientID.Location = new System.Drawing.Point(155, 138);
+            this.tboxClientID.Location = new System.Drawing.Point(207, 170);
+            this.tboxClientID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxClientID.Name = "tboxClientID";
-            this.tboxClientID.Size = new System.Drawing.Size(415, 20);
+            this.tboxClientID.Size = new System.Drawing.Size(552, 22);
             this.tboxClientID.TabIndex = 7;
             // 
             // tboxSecret
             // 
-            this.tboxSecret.Location = new System.Drawing.Point(155, 164);
+            this.tboxSecret.Location = new System.Drawing.Point(207, 202);
+            this.tboxSecret.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxSecret.Name = "tboxSecret";
-            this.tboxSecret.Size = new System.Drawing.Size(415, 20);
+            this.tboxSecret.Size = new System.Drawing.Size(552, 22);
             this.tboxSecret.TabIndex = 8;
             // 
             // lblServer
             // 
             this.lblServer.AutoSize = true;
-            this.lblServer.Location = new System.Drawing.Point(9, 8);
+            this.lblServer.Location = new System.Drawing.Point(12, 10);
+            this.lblServer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblServer.Name = "lblServer";
-            this.lblServer.Size = new System.Drawing.Size(106, 13);
+            this.lblServer.Size = new System.Drawing.Size(139, 17);
             this.lblServer.TabIndex = 9;
             this.lblServer.Text = "SQL Server Instance";
             // 
             // lblDatabase
             // 
             this.lblDatabase.AutoSize = true;
-            this.lblDatabase.Location = new System.Drawing.Point(9, 34);
+            this.lblDatabase.Location = new System.Drawing.Point(12, 42);
+            this.lblDatabase.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatabase.Name = "lblDatabase";
-            this.lblDatabase.Size = new System.Drawing.Size(135, 13);
+            this.lblDatabase.Size = new System.Drawing.Size(178, 17);
             this.lblDatabase.TabIndex = 10;
             this.lblDatabase.Text = "Case SQL Database Name";
             // 
             // lblSQLUser
             // 
             this.lblSQLUser.AutoSize = true;
-            this.lblSQLUser.Location = new System.Drawing.Point(9, 60);
+            this.lblSQLUser.Location = new System.Drawing.Point(12, 74);
+            this.lblSQLUser.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSQLUser.Name = "lblSQLUser";
-            this.lblSQLUser.Size = new System.Drawing.Size(79, 13);
+            this.lblSQLUser.Size = new System.Drawing.Size(105, 17);
             this.lblSQLUser.TabIndex = 11;
             this.lblSQLUser.Text = "SQL Username";
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(9, 86);
+            this.lblPassword.Location = new System.Drawing.Point(12, 106);
+            this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(77, 13);
+            this.lblPassword.Size = new System.Drawing.Size(101, 17);
             this.lblPassword.TabIndex = 12;
             this.lblPassword.Text = "SQL Password";
             // 
             // lblIproURL
             // 
             this.lblIproURL.AutoSize = true;
-            this.lblIproURL.Location = new System.Drawing.Point(9, 112);
+            this.lblIproURL.Location = new System.Drawing.Point(12, 138);
+            this.lblIproURL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblIproURL.Name = "lblIproURL";
-            this.lblIproURL.Size = new System.Drawing.Size(76, 13);
+            this.lblIproURL.Size = new System.Drawing.Size(97, 17);
             this.lblIproURL.TabIndex = 13;
             this.lblIproURL.Text = "Ipro Web URL";
             // 
             // lblClient_id
             // 
             this.lblClient_id.AutoSize = true;
-            this.lblClient_id.Location = new System.Drawing.Point(9, 138);
+            this.lblClient_id.Location = new System.Drawing.Point(12, 170);
+            this.lblClient_id.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblClient_id.Name = "lblClient_id";
-            this.lblClient_id.Size = new System.Drawing.Size(73, 13);
+            this.lblClient_id.Size = new System.Drawing.Size(93, 17);
             this.lblClient_id.TabIndex = 14;
             this.lblClient_id.Text = "API_Client_ID";
             // 
             // lblClientSecret
             // 
             this.lblClientSecret.AutoSize = true;
-            this.lblClientSecret.Location = new System.Drawing.Point(9, 164);
+            this.lblClientSecret.Location = new System.Drawing.Point(12, 202);
+            this.lblClientSecret.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblClientSecret.Name = "lblClientSecret";
-            this.lblClientSecret.Size = new System.Drawing.Size(73, 13);
+            this.lblClientSecret.Size = new System.Drawing.Size(96, 17);
             this.lblClientSecret.TabIndex = 15;
             this.lblClientSecret.Text = "Client _Secret";
             // 
             // tboxResultsID
             // 
-            this.tboxResultsID.Location = new System.Drawing.Point(155, 190);
+            this.tboxResultsID.Location = new System.Drawing.Point(207, 234);
+            this.tboxResultsID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxResultsID.Name = "tboxResultsID";
-            this.tboxResultsID.Size = new System.Drawing.Size(52, 20);
+            this.tboxResultsID.Size = new System.Drawing.Size(68, 22);
             this.tboxResultsID.TabIndex = 16;
             // 
             // tboxRevUser
             // 
-            this.tboxRevUser.Location = new System.Drawing.Point(155, 216);
+            this.tboxRevUser.Location = new System.Drawing.Point(207, 266);
+            this.tboxRevUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tboxRevUser.Name = "tboxRevUser";
-            this.tboxRevUser.Size = new System.Drawing.Size(415, 20);
+            this.tboxRevUser.Size = new System.Drawing.Size(552, 22);
             this.tboxRevUser.TabIndex = 17;
             // 
             // lblResultsID
             // 
             this.lblResultsID.AutoSize = true;
-            this.lblResultsID.Location = new System.Drawing.Point(9, 190);
+            this.lblResultsID.Location = new System.Drawing.Point(12, 234);
+            this.lblResultsID.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblResultsID.Name = "lblResultsID";
-            this.lblResultsID.Size = new System.Drawing.Size(93, 13);
+            this.lblResultsID.Size = new System.Drawing.Size(121, 17);
             this.lblResultsID.TabIndex = 18;
             this.lblResultsID.Text = "Search Results ID";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 216);
+            this.label2.Location = new System.Drawing.Point(12, 266);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 13);
+            this.label2.Size = new System.Drawing.Size(122, 17);
             this.label2.TabIndex = 19;
             this.label2.Text = "Review Username";
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(213, 191);
+            this.btnSearch.Location = new System.Drawing.Point(284, 235);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(66, 19);
+            this.btnSearch.Size = new System.Drawing.Size(88, 23);
             this.btnSearch.TabIndex = 20;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // richTextBox1
+            // rchTxtBx1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(12, 533);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(558, 185);
-            this.richTextBox1.TabIndex = 21;
-            this.richTextBox1.Text = "";
+            this.rchTxtBx1.Location = new System.Drawing.Point(16, 656);
+            this.rchTxtBx1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rchTxtBx1.Name = "rchTxtBx1";
+            this.rchTxtBx1.Size = new System.Drawing.Size(743, 227);
+            this.rchTxtBx1.TabIndex = 21;
+            this.rchTxtBx1.Text = "";
             // 
             // IForce
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 723);
-            this.Controls.Add(this.richTextBox1);
+            this.ClientSize = new System.Drawing.Size(779, 890);
+            this.Controls.Add(this.rchTxtBx1);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblResultsID);
@@ -262,6 +284,7 @@
             this.Controls.Add(this.dView1);
             this.Controls.Add(this.btnLaunch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "IForce";
             this.Text = "IForce";
             ((System.ComponentModel.ISupportInitialize)(this.dView1)).EndInit();
@@ -293,7 +316,7 @@
         private System.Windows.Forms.Label lblResultsID;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rchTxtBx1;
     }
 }
 
