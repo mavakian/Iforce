@@ -30,7 +30,7 @@ namespace IForce
                                tboxResultsID.Text,
                                tboxRevUser.Text) == true)
             {
-                Program.Connect(dView1, rchTxtBx1);
+                IForceApp.ConnectToImage(dView1, rchTxtBx1);
             };
             
         }
@@ -45,11 +45,30 @@ namespace IForce
                                tboxResultsID.Text) == true)
                               
             {
-                Program.Search(dView1);
+                IForceApp.Search(dView1);
             };
                    
         }
 
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            UpdateProperties SetInputs = new UpdateProperties();
+            if (SetInputs.UpdateConnectBtnInputs(tboxServer.Text,
+                               tboxDb.Text,
+                               tboxSQLUser.Text,
+                               tboxPassword.Text)== true)
 
+            {
+                IForceApp.GetDatabaseList(chxLstBx1);
+            }; 
+        }
+
+
+
+        private void chxLstBx1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            IForceApp.SetCaseName(chxLstBx1, e);
+            
+        }
     }
 }
