@@ -19,6 +19,7 @@ namespace IForce
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             Application.Run(new IForce());
         }
 

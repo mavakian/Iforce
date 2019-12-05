@@ -57,25 +57,29 @@ namespace IForce
             this.chxLstBx1 = new System.Windows.Forms.CheckedListBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLaunch
             // 
             this.btnLaunch.Location = new System.Drawing.Point(12, 624);
             this.btnLaunch.Name = "btnLaunch";
-            this.btnLaunch.Size = new System.Drawing.Size(558, 94);
+            this.btnLaunch.Size = new System.Drawing.Size(439, 94);
             this.btnLaunch.TabIndex = 0;
-            this.btnLaunch.Text = "Kick the Tires...";
+            this.btnLaunch.Text = "Image Document Set";
             this.btnLaunch.UseVisualStyleBackColor = true;
             this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
             // 
             // dView1
             // 
             this.dView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dView1.Location = new System.Drawing.Point(576, 465);
+            this.dView1.Location = new System.Drawing.Point(576, 448);
             this.dView1.Name = "dView1";
-            this.dView1.Size = new System.Drawing.Size(684, 314);
+            this.dView1.Size = new System.Drawing.Size(567, 267);
             this.dView1.TabIndex = 1;
             // 
             // tboxServer
@@ -116,7 +120,7 @@ namespace IForce
             this.tboxURL.Name = "tboxURL";
             this.tboxURL.Size = new System.Drawing.Size(415, 20);
             this.tboxURL.TabIndex = 6;
-            this.tboxURL.Text = "http://tst-suptrk034:1124";
+            this.tboxURL.Text = "http://tst-suptrk034:1125";
             // 
             // tboxClientID
             // 
@@ -203,6 +207,7 @@ namespace IForce
             this.tboxResultsID.Name = "tboxResultsID";
             this.tboxResultsID.Size = new System.Drawing.Size(52, 20);
             this.tboxResultsID.TabIndex = 16;
+            this.tboxResultsID.Text = "2";
             // 
             // tboxRevUser
             // 
@@ -242,15 +247,17 @@ namespace IForce
             // 
             // rchTxtBx1
             // 
-            this.rchTxtBx1.Location = new System.Drawing.Point(576, 157);
+            this.rchTxtBx1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.rchTxtBx1.Location = new System.Drawing.Point(576, 199);
             this.rchTxtBx1.Name = "rchTxtBx1";
-            this.rchTxtBx1.Size = new System.Drawing.Size(684, 285);
+            this.rchTxtBx1.Size = new System.Drawing.Size(567, 243);
             this.rchTxtBx1.TabIndex = 21;
             this.rchTxtBx1.Text = "";
             // 
             // chxLstBx1
             // 
             this.chxLstBx1.AllowDrop = true;
+            this.chxLstBx1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.chxLstBx1.CheckOnClick = true;
             this.chxLstBx1.FormattingEnabled = true;
             this.chxLstBx1.Location = new System.Drawing.Point(12, 138);
@@ -274,18 +281,57 @@ namespace IForce
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Stencil", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.MediumBlue;
-            this.label1.Location = new System.Drawing.Point(737, 42);
+            this.label1.ForeColor = System.Drawing.Color.LightSlateGray;
+            this.label1.Location = new System.Drawing.Point(672, 302);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(381, 38);
             this.label1.TabIndex = 24;
             this.label1.Text = "Under Construction";
             // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(457, 624);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(109, 94);
+            this.btnImport.TabIndex = 26;
+            this.btnImport.Text = "Import Images";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox1.Image = global::IForce.Properties.Resources.swat_new;
+            this.pictureBox1.Location = new System.Drawing.Point(576, 8);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(567, 185);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 25;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.WaitOnLoad = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.SystemColors.Control;
+            this.label3.Font = new System.Drawing.Font("Stencil", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(781, 138);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(128, 38);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "IForce";
+            // 
             // IForce
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1272, 723);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(1152, 727);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.btnImport);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.chxLstBx1);
@@ -315,6 +361,7 @@ namespace IForce
             this.Name = "IForce";
             this.Text = "IForce";
             ((System.ComponentModel.ISupportInitialize)(this.dView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -349,6 +396,9 @@ namespace IForce
         private System.Windows.Forms.CheckedListBox chxLstBx1;
         private System.Windows.Forms.Button btnConnect;
         private Label label1;
+        private PictureBox pictureBox1;
+        private Button btnImport;
+        private Label label3;
     }
 }
 

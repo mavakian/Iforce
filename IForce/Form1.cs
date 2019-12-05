@@ -70,5 +70,10 @@ namespace IForce
             IForceApp.SetCaseName(chxLstBx1, e);
             
         }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
+        }
     }
 }

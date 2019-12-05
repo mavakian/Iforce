@@ -78,6 +78,13 @@ namespace IForce
                             $"WHERE CPE.[NAME] = '{UserInput.CaseName}'AND CPN.PropertyName = 'DataDirectory'";
             return sqlqry;
         }
+
+        public static string GetUserId()
+        {
+            string sqlqry = $"SELECT UserKey FROM ActivityTracking.DIM_User WHERE UserName = '{UserInput.ReviewUsername}'";
+            return sqlqry;
+        }
+
         public static string GetEcapConfig()
         {
             string sqlqry = $"SELECT MAX(SUBSTRING(ConfigConnectionString " +	
@@ -104,6 +111,20 @@ namespace IForce
         public static string GetIntegrationDir()
         {
             string sqlqry = $"SELECT APILocation From ExternalIntegrationConfiguration";
+            return sqlqry;
+        }
+
+        public static string InsertFirstPage(int Docid, int i, string begdoc, string file, long filesizeKb, int userid)
+        {
+            string sqlqry = $"INSERT INTO .dbo.DocumentPages ( Docid, PageNbr, ImageKey, ImageFilePath, Rotation, CreatedDate, ModifiedDate, HasImage, ImageFileSize, CreatedByKey, ModifiedByKey) " +
+                            $"SELECT {Docid}, {i}, '{begdoc}', '{file}', 0, GETDATE(), GETDATE(), 1, {filesizeKb}, {userid},{userid}";
+            return sqlqry;
+        }
+
+        public static string InsertOtherPages(int Docid, int i, string imagekey, string file, int userid)
+        {
+            string sqlqry = $"INSERT INTO .dbo.DocumentPages ( Docid, PageNbr, ImageKey, ImageFilePath, Rotation, CreatedDate, ModifiedDate, HasImage, ImageFileSize, CreatedByKey, ModifiedByKey) " +
+                            $"SELECT {Docid}, {i}, '{imagekey}', '{file}', 0, GETDATE(), GETDATE(), 1, 0, {userid},{userid}";
             return sqlqry;
         }
     }

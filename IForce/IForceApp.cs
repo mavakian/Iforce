@@ -9,100 +9,12 @@ using System.IO;
 using System.Data.SqlClient;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using PdfSharp.Pdf.IO;
 
 namespace IForce
 {
     class IForceApp
     {
-        internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
-        {
-                    var docInfos = new List<DocInfo>();
-
-                    foreach (DataRow row in _res.Rows)
-                    {
-                        var docInfo = new DocInfo((int)row["DocID"], (string)row["BEGDOC"], (string)row["Native"], (string)row["NativeFileExtension"]);
-                        docInfos.Add(docInfo);
-                    }
-
-                    Parallel.ForEach(docInfos, x =>
-                    {
-                        try
-                        {
-                            //FileName changing and copy goes in here x is each docInfo
-                            var fileInfo = new FileInfo(x.Native);
-                            var destFileName = UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1) + "\\" + x.BegDoc + (x.FileExtension.Contains('.') ? x.FileExtension : "." + x.FileExtension);
-                            var dirInfo = new DirectoryInfo(UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1));
-                            if (!dirInfo.Exists)
-                            {
-                                dirInfo.Create();
-                            }
-                            fileInfo.CopyTo(destFileName);
-                        }
-                        catch(Exception ex) { } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
-                    });
-
-            tokenRequest(WebRequests.authenticateRequest, rchbx1);
-
-        }
-
-        //public string beginWebRequst()
-        //{
-        //    return;
-        //}
-        public static void tokenRequest(string _postdata, RichTextBox richTextBox)
-        {
-               // richTextBox.AppendText("Authenticating with API");
-            WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
-            request.Method = "POST";
-            string postData = _postdata;
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-            //get response
-            WebResponse response = request.GetResponse();
-            dataStream = response.GetResponseStream();
-           // richTextBox.Text = ((HttpWebResponse)response).StatusDescription;
-            StreamReader reader = new StreamReader(dataStream);
-            string responseFromServer = reader.ReadToEnd();
-            JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
-            var token = jObject.SelectToken("access_token");
-            UserInput.AcquiredToken = token.ToString();
-            // Clean up the streams.
-            reader.Close();
-            dataStream.Close();
-            response.Close();
-            //Start call for job start
-            StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
-
-        }
-
-        public static void StartImagingJob(string _postdata, RichTextBox richTextBox)
-        {
-            WebRequest request = WebRequest.Create(UserInput.IproURL+ WebRequests.jobStartURLsuffix);
-            request.Method = "POST";
-            request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
-            string postData = _postdata;
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/json-patch+json";
-            request.ContentLength = byteArray.Length;
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-           // richTextBox.AppendText(@"/r/n" + "Imaging Job Called");
-
-
-            // Get the response.
-            WebResponse response = request.GetResponse();
-            dataStream = response.GetResponseStream();
-            richTextBox.Text = ((HttpWebResponse)response).StatusDescription;
-            StreamReader reader = new StreamReader(dataStream);
-            string responseFromServer = reader.ReadToEnd();
-           // richTextBox.AppendText(responseFromServer);
-
-        }
 
         //Program
         public static void GetDatabaseList(CheckedListBox chxLstBx1)
@@ -147,32 +59,6 @@ namespace IForce
             }
         }
 
-        //public static void SetCaseDatabsse()
-        //{
-        //    OpenSQL Results = new OpenSQL(UserInput.GetCaseDatabase(), UserInput.ADDDatabase);
-        //    Results.Connection.Open();
-        //    SqlDataReader reader = Results.Cmd.ExecuteReader();
-        //    while (reader.Read())
-        //    {
-        //        UserInput.CaseDataase = reader.GetValue(0).ToString();
-        //    }
-        //    reader.Close();
-        //    Results.Connection.Close();
-        //}
-
-        //public static void GetCPEID()
-        //{
-        //    OpenSQL Results = new OpenSQL(UserInput.GetCaseDatabase(), UserInput.ADDDatabase);
-        //    Results.Connection.Open();
-        //    SqlDataReader reader = Results.Cmd.ExecuteReader();
-        //    while (reader.Read())
-        //    {
-        //        UserInput.CaseDataase = reader.GetValue(0).ToString();
-        //    }
-        //    reader.Close();
-        //    Results.Connection.Close();
-        //}
-
         public static void GetCaseDetails()
         {
             OpenSQL Results = new OpenSQL(UserInput.GetCaseDetails(), UserInput.ADDDatabase);
@@ -212,14 +98,25 @@ namespace IForce
             SqlDataReader reader = Results.Cmd.ExecuteReader();
             while (reader.Read())
             {
-                UserInput.SourcePath = reader.GetValue(0).ToString() + @"\IMG\" ;
+                UserInput.SourcePath = reader.GetValue(0).ToString() + @"\Natives\" ;
 
             }
             reader.Close();
             Results.Connection.Close();
+            GetUserKey();
         }
-
-
+        public static void GetUserKey()
+        {
+            OpenSQL Results = new OpenSQL(UserInput.GetUserId());
+            Results.Connection.Open();
+            SqlDataReader reader = Results.Cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                UserInput.UserID = (int)reader.GetValue(0);
+            }
+            reader.Close();
+            Results.Connection.Close();
+        }
 
         public static void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
         {
@@ -243,18 +140,181 @@ namespace IForce
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
                 dview1.DataSource = srch;
-
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+            
+        }
 
+        internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
+        {
+            var docInfos = new List<DocInfo>();
+
+            foreach (DataRow row in _res.Rows)
+            {
+                var docInfo = new DocInfo((int)row["DocID"], (string)row["BEGDOC"], (string)row["Native"], (string)row["NativeFileExtension"]);
+                docInfos.Add(docInfo);
+            }
+
+            Parallel.ForEach(docInfos, x =>
+            {
+                try
+                {
+                    //FileName changing and copy goes in here x is each docInfo
+                    var fileInfo = new FileInfo(x.Native);
+                    var destFileName = UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1) + "\\" + x.BegDoc + (x.FileExtension.Contains('.') ? x.FileExtension : "." + x.FileExtension);
+                    var dirInfo = new DirectoryInfo(UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1));
+                    if (!dirInfo.Exists)
+                    {
+                        dirInfo.Create();
+                    }
+                    fileInfo.CopyTo(destFileName);
+                }
+                catch{ } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
+            });
+
+            tokenRequest(WebRequests.authenticateRequest, rchbx1);
+        }
+
+     
+        public static void tokenRequest(string _postdata, RichTextBox richTextBox)
+        {
+            // richTextBox.AppendText("Authenticating with API");
+            WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
+            request.Method = "POST";
+            string postData = _postdata;
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = byteArray.Length;
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
+            //get response
+            WebResponse response = request.GetResponse();
+            dataStream = response.GetResponseStream();
+            // richTextBox.Text = ((HttpWebResponse)response).StatusDescription;
+            StreamReader reader = new StreamReader(dataStream);
+            string responseFromServer = reader.ReadToEnd();
+            JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
+            var token = jObject.SelectToken("access_token");
+            UserInput.AcquiredToken = token.ToString();
+            // Clean up the streams.
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+            //Start call for job start
+            StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
+
+        }
+
+        public static void StartImagingJob(string _postdata, RichTextBox richTextBox)
+        {
+            WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.jobStartURLsuffix);
+            request.Method = "POST";
+            request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
+            string postData = _postdata;
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            request.ContentType = "application/json-patch+json";
+            request.ContentLength = byteArray.Length;
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
+            // Get the response.
+            WebResponse response = request.GetResponse();
+            dataStream = response.GetResponseStream();
+            richTextBox.Text = ((HttpWebResponse)response).StatusDescription;
+            StreamReader reader = new StreamReader(dataStream);
+            string responseFromServer = reader.ReadToEnd();
+            // richTextBox.AppendText(responseFromServer);
+
+            //GetJobID()
+                //GetJobStatus()
+                  //When Status = Complete Then
 
         }
 
 
-
+        //end of IForceAPP class
 
     }
+
+
+
+    public static class DocumentIterator
+    {
+        public static DataTable ResultsTable;
+
+
+        public static void BuildDatatable()
+        {
+            DataTable srch = new DataTable();
+            OpenSQL Results = new OpenSQL(UserInput.GetDocids());
+            try
+            {
+                Results.Connection.Open();
+                srch.Load(Results.Cmd.ExecuteReader());
+                Results.Connection.Close();
+                ResultsTable = srch;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public static void IterateDocuments(string[] filePaths)
+        {
+            BuildDatatable();
+
+
+            foreach (string file in filePaths)
+            {
+                string begdoc = Path.GetFileNameWithoutExtension(file);
+                long filesizeKb = (new FileInfo(file).Length) / 1024;
+                //RchBox1.AppendText($"\r\n {begdoc}");
+
+                try
+                {
+                    using (var sourceDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import))
+                    {
+                        int pgCnt = sourceDocument.PageCount;
+                        DataRow[] row = ResultsTable.Select($"BEGDOC = '{begdoc}'");
+                        int Docid = (int)row[0]["Docid"];
+                        for (int i = 1; i <= pgCnt; i++)
+                        {
+                            if (i == 1)
+                            {
+                                OpenSQL Results = new OpenSQL(UserInput.InsertFirstPage(Docid, 1, begdoc, file, filesizeKb, UserInput.UserID));
+                                Results.Connection.Open();
+                                Results.Cmd.ExecuteNonQuery();
+                                Results.Connection.Close();
+                            }
+                            else
+                            {
+                                string imagekey = begdoc + "." + i.ToString("D9");
+                                OpenSQL Results = new OpenSQL(UserInput.InsertOtherPages(Docid, i, imagekey, file, UserInput.UserID));
+                                Results.Connection.Open();
+                                Results.Cmd.ExecuteNonQuery();
+                                Results.Connection.Close();
+                            }
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show(ex.ToString());
+
+                }
+
+            }
+            MessageBox.Show("Done.");
+        }
+    }
+
+
 }

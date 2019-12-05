@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace IForce
 {
@@ -20,6 +21,17 @@ namespace IForce
             Native = native;
             FileExtension = fileExtension;
         }
+
+    }
+
+    public static class ReadDisk
+    {
+        public static string[] getFilePaths(string sourcePath)
+        {
+            string[] filePaths = Directory.GetFiles(sourcePath, "*.pdf", SearchOption.AllDirectories);
+            return filePaths;
+        }
+
 
     }
 }
