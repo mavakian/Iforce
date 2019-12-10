@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Data;
 using System.IO;
+using System.Windows;
 
 namespace IForce
 {
@@ -19,7 +20,7 @@ namespace IForce
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+           
             Application.Run(new IForce());
         }
 

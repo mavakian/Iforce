@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Pdf.IO;
+using Newtonsoft.Json;
 
 namespace IForce
 {
@@ -19,8 +20,10 @@ namespace IForce
         //Program
         public static void GetDatabaseList(CheckedListBox chxLstBx1)
         {
+           
             try
             {
+                
                 OpenSQL Results = new OpenSQL(UserInput.GetCaseName(), UserInput.ADDDatabase);
                 Results.Connection.Open();
                 SqlDataReader reader = Results.Cmd.ExecuteReader();
@@ -34,7 +37,9 @@ namespace IForce
             }
             catch(Exception ex)
             {
+                IForce.Logger("Case List Retrieval Failed");
                 MessageBox.Show(ex.Message);
+                IForce._iforce.btnConnect.Enabled = true;
             }
         }
 
@@ -44,6 +49,7 @@ namespace IForce
             {
 
                 UserInput.CaseName = chxLstBx1.SelectedItem.ToString();
+                    IForce.Logger("Case: "+ UserInput.CaseName);
                 // SetCaseDatabsse();
                 GetCaseDetails();
             }
@@ -53,6 +59,7 @@ namespace IForce
                 {
                     UserInput.CaseName = String.Empty;
                     UserInput.CaseDataase = String.Empty;
+                    IForce.Logger("Case Cleared");
                 }
                 e.NewValue = CheckState.Unchecked;
                 chxLstBx1.ClearSelected();
@@ -70,15 +77,21 @@ namespace IForce
                 UserInput.CaseName = reader.GetValue(1).ToString();
                 UserInput.CaseDataase = reader.GetValue(2).ToString();
                 UserInput.OutputPath = reader.GetValue(3).ToString() + @"\Api\";
+                
 
             }
             reader.Close();
             Results.Connection.Close();
+                IForce.Logger("CPEID: "+UserInput.CPEID);
+                IForce.Logger("CaseName: " + UserInput.CaseName);
+                IForce.Logger("CaseDatabase: " + UserInput.CaseDataase);
+                IForce.Logger("Case Directory: " + UserInput.OutputPath);
             GetEcapconfig();
+            ResetSettingsToUI();
         }
 
         public static void GetEcapconfig()
-        {
+        {   
             OpenSQL Results = new OpenSQL(UserInput.GetEcapConfig(), UserInput.ADDDatabase);
             Results.Connection.Open();
             SqlDataReader reader = Results.Cmd.ExecuteReader();
@@ -88,6 +101,7 @@ namespace IForce
             }
             reader.Close();
             Results.Connection.Close();
+                IForce.Logger("EcapConfig Database Name: " + UserInput.EcapConfig);
             GetIntegrationDir();
         }
 
@@ -98,11 +112,12 @@ namespace IForce
             SqlDataReader reader = Results.Cmd.ExecuteReader();
             while (reader.Read())
             {
-                UserInput.SourcePath = reader.GetValue(0).ToString() + @"\Natives\" ;
+                UserInput.SourcePath = reader.GetValue(0).ToString() + @"Natives\" ;
 
             }
             reader.Close();
             Results.Connection.Close();
+                IForce.Logger("Integration Directory: " + UserInput.SourcePath);
             GetUserKey();
         }
         public static void GetUserKey()
@@ -115,7 +130,14 @@ namespace IForce
                 UserInput.UserID = (int)reader.GetValue(0);
             }
             reader.Close();
+                IForce.Logger("UserID: " + UserInput.UserID);
             Results.Connection.Close();
+        }
+
+        public static void ResetSettingsToUI()
+        {
+            WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath);
+            IForce._iforce.rchTxtBx2.Text = UserInput.StartJobRequest;
         }
 
         public static void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
@@ -151,6 +173,8 @@ namespace IForce
 
         internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
         {
+                IForce.Logger("Native File Copy Errors:");
+
             var docInfos = new List<DocInfo>();
 
             foreach (DataRow row in _res.Rows)
@@ -173,67 +197,92 @@ namespace IForce
                     }
                     fileInfo.CopyTo(destFileName);
                 }
-                catch{ } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
+                catch{ IForce.Logger(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
             });
 
-            tokenRequest(WebRequests.authenticateRequest, rchbx1);
+            tokenRequest(WebRequests.authenticateRequest(), rchbx1);
         }
 
      
         public static void tokenRequest(string _postdata, RichTextBox richTextBox)
         {
-            // richTextBox.AppendText("Authenticating with API");
-            WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
-            request.Method = "POST";
-            string postData = _postdata;
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-            //get response
-            WebResponse response = request.GetResponse();
-            dataStream = response.GetResponseStream();
-            // richTextBox.Text = ((HttpWebResponse)response).StatusDescription;
-            StreamReader reader = new StreamReader(dataStream);
-            string responseFromServer = reader.ReadToEnd();
-            JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
-            var token = jObject.SelectToken("access_token");
-            UserInput.AcquiredToken = token.ToString();
-            // Clean up the streams.
-            reader.Close();
-            dataStream.Close();
-            response.Close();
-            //Start call for job start
-            StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
+            try
+            {
+                IForce.Logger("Acquiring authorization token.");
 
+                WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
+                request.Method = "POST";
+                string postData = _postdata;
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+                //get response
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+
+                IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusDescription);
+
+                StreamReader reader = new StreamReader(dataStream);
+                string responseFromServer = reader.ReadToEnd();
+                JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
+                var token = jObject.SelectToken("access_token");
+                UserInput.AcquiredToken = token.ToString();
+                    IForce.Logger("Token acquired.");
+                // Clean up the streams.
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+                //Start call for job start
+                //StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
+                StartImagingJob(UserInput.StartJobRequest, richTextBox);
+
+
+            }
+            catch(Exception ex)
+            {
+                IForce.Logger("Token acquisition failed. "+ ex.Message);
+            }
+               
         }
 
         public static void StartImagingJob(string _postdata, RichTextBox richTextBox)
         {
-            WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.jobStartURLsuffix);
-            request.Method = "POST";
-            request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
-            string postData = _postdata;
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/json-patch+json";
-            request.ContentLength = byteArray.Length;
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-            // Get the response.
-            WebResponse response = request.GetResponse();
-            dataStream = response.GetResponseStream();
-            richTextBox.Text = ((HttpWebResponse)response).StatusDescription;
-            StreamReader reader = new StreamReader(dataStream);
-            string responseFromServer = reader.ReadToEnd();
-            // richTextBox.AppendText(responseFromServer);
+            try
+            {
+                    IForce.Logger("Job Creation Request Initiated.");
+                WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.jobStartURLsuffix);
+                request.Method = "POST";
+                request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
+                string postData = _postdata;
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json-patch+json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+                // Get the response.
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                    IForce.Logger("Job Creation Response: "+ ((HttpWebResponse)response).StatusDescription);
+                StreamReader reader = new StreamReader(dataStream);
+               // string responseFromServer = reader.ReadToEnd();
+                   // IForce.Logger(responseFromServer);
+                   // IForce.Logger("Imaging Job available in Job Manager.");
+                // richTextBox.AppendText(responseFromServer);
 
-            //GetJobID()
+                //GetJobID()
                 //GetJobStatus()
-                  //When Status = Complete Then
+                //When Status = Complete Then
 
+            }
+            catch(Exception ex)
+            {
+                IForce.Logger("Unable to create imaging Job. " + ex.Message);
+            }
+                
         }
 
 
@@ -289,6 +338,8 @@ namespace IForce
                             {
                                 OpenSQL Results = new OpenSQL(UserInput.InsertFirstPage(Docid, 1, begdoc, file, filesizeKb, UserInput.UserID));
                                 Results.Connection.Open();
+                                Results.Cmd.ExecuteNonQuery();
+                                Results.Cmd.CommandText = UserInput.UpdateHasImage(Docid);
                                 Results.Cmd.ExecuteNonQuery();
                                 Results.Connection.Close();
                             }
