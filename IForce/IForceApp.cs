@@ -142,6 +142,7 @@ namespace IForce
 
         public static void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
         {
+            IForce.Logger("Native File Copy In Progress: " + UserInput.SourcePath);
             DataTable res = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.GetDocids());
             Results.Connection.Open();
@@ -149,6 +150,8 @@ namespace IForce
             Results.Connection.Close();
             dview1.DataSource = res;
             CopyAndRenameFiles(res, rchbx1);
+            tokenRequest(WebRequests.authenticateRequest(), rchbx1);
+            StartImagingJob(UserInput.StartJobRequest, rchbx1);
             MessageBox.Show("Done."); //temp
         }
 
@@ -173,9 +176,9 @@ namespace IForce
 
         internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
         {
-                IForce.Logger("Native File Copy Errors:");
-
+           
             var docInfos = new List<DocInfo>();
+            var errordocs = new List<string>();
 
             foreach (DataRow row in _res.Rows)
             {
@@ -197,10 +200,18 @@ namespace IForce
                     }
                     fileInfo.CopyTo(destFileName);
                 }
-                catch{ IForce.Logger(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
+                catch{errordocs.Add(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
             });
 
-            tokenRequest(WebRequests.authenticateRequest(), rchbx1);
+            IForce.Logger("ERRORS:");
+
+            foreach(string doc in errordocs)
+            {
+                IForce.ListLogger(doc);
+            }
+            
+
+
         }
 
      
@@ -237,7 +248,7 @@ namespace IForce
                 response.Close();
                 //Start call for job start
                 //StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
-                StartImagingJob(UserInput.StartJobRequest, richTextBox);
+                
 
 
             }

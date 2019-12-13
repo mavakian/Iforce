@@ -44,10 +44,14 @@ namespace IForce
 
         public static void Logger(string text)
         {
+            _iforce.rchTxtBx1.AppendText(Environment.NewLine + DateTime.Now.ToString() + " " + text);
+        }
+        public static void ListLogger(string text)
+        {
             _iforce.rchTxtBx1.AppendText(Environment.NewLine + text);
         }
 
-        private void btnLaunch_Click(object sender, EventArgs e)
+        private async void btnLaunch_Click(object sender, EventArgs e)
         {
             btnSearch.Enabled = false;
             btnConnect.Enabled = false;
