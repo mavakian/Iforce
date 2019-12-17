@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net;
 
 namespace IForce
 {
@@ -26,13 +27,15 @@ namespace IForce
         public static string AcquiredToken { get; set; }
         public static string Response { get; set; }
         public static string Request { get; set; }
+        public static string Location { get; set; }
+        public static string JobID { get; set; }
         //Paths
         public static string SourcePath { get; set; } //= @"\\testing.local\dfs\SupportTestRacks\TST-SUPTRK012\Integration\34"; //This could be the integration directory
         public static string OutputPath { get; set; } //This should be the case directory 
         //Review
         public static int ResultsID { get; set; } = 1; //search resuts id from CaseDB.UserTables.SearchResultsUser[Dim_User.UserID]
         public static string ReviewUsername { get; set; }
-        public static int UserID { get; set; } = 1;
+        public static int UserID { get; set; } = 1;  
         
         //Queries
 
@@ -191,7 +194,7 @@ namespace IForce
         }
     }
 
-    public static class WebRequests
+    public static class WebRequests 
     {
         public static string authURLSuffix = "/auth/connect/token";
         public static string jobStartURLsuffix = "/core/jobmanager/api/jobs/image";
@@ -212,6 +215,11 @@ namespace IForce
             string startJobRequest = "{\n  \"description\": \"Imaging Request\",\n  \"caseName\": \"Name of Case (Optional)\",\n  \"caseId\": \"4 (Optional)\",\n  \"submittedOnBehalfOf\": \"Name Of Submitter (Optional)\",\n  \"request\": {\n    \"inputDirectory\": \"" + pathIn + "\",\n    \"outputDirectory\": \"" + pathOut + "\",\n    \"splitImages\": false,\n    \"fileSettings\": {\n      \"colorDepth\": \"TrueColor\",\n      \"paperSize\": \"AsIs\",\n      \"orientation\": \"AsIs\"\n    },\n    \"wordProcessingOptions\": {\n      \"colorDepth\": \"TrueColor\",\n      \"paperSize\": \"AsIs\",\n      \"orientation\": \"AsIs\",\n      \"revisions\": \"AsIs\",\n      \"summaryGenerateImage\": false,\n      \"summaryIncludeDocumentProperties\": false,\n      \"summaryIncludeRevisions\": false,\n      \"summaryIncludeComments\": false,\n      \"summaryIncludeRoutingSlips\": false,\n      \"linkedContentSummary\": false,\n      \"dateFieldHandling\": \"DoNotReplace\",\n      \"dateFieldComments\": \"\",\n      \"filenameFieldHandling\": \"DoNotReplace\",\n      \"filenameFieldComments\": \"\",\n      \"resolution\": 300,\n      \"showHiddenText\": true,\n      \"scaleToPage\": false,\n      \"customPaperSizeLength\": 11,\n      \"customPaperSizeWidth\": 8.5\n    },\n    \"excelProcessingOptions\": {\n      \"autoFilter\": false,\n      \"autofitColumns\": false,\n      \"autofitRows\": false,\n      \"blankPageRemovalMethod\": \"BothPageOrderOptions\",\n      \"centerOnPageHorizontally\": false,\n      \"centerOnPageVertically\": false,\n      \"clearPrintArea\": true,\n      \"clearPrintTitleColumns\": true,\n      \"clearPrintTitleRows\": true,\n      \"colorDepth\": \"EightBitColor\",\n      \"comments\": \"AsDisplayed\",\n      \"customPaperSizeLength\": 11,\n      \"customPaperSizeWidth\": 8.5,\n      \"customPaperSizeUnitsInches\": true,\n      \"dateFieldComments\": \"\",\n      \"dateFieldHandlingType\": \"ReplaceWithDateCreated\",\n      \"disableExcelFilters\": false,\n      \"displayHeadings\": true,\n      \"doNotIncludeFooters\": true,\n      \"doNotIncludeHeaders\": true,\n      \"excelPaperSize\": \"Letter\",\n      \"expandPivotTables\": false,\n      \"headerFooterFilenameFieldComments\": \"\",\n      \"headerFooterFilenameFieldHandling\": \"ReplaceWithFilepath\",\n      \"linkedContentSummary\": false,\n      \"noFillColor\": true,\n      \"orientation\": \"Portrait\",\n      \"pageOrder\": \"DownAndOver\",\n      \"printGridLines\": true,\n      \"revealHiddenColumns\": false,\n      \"revealHiddenRows\": false,\n      \"scaling\": \"AdjustToPercent\",\n      \"scalingPagesTall\": 50,\n      \"scalingPagesWide\": 1,\n      \"scalingPercent\": 100,\n      \"summaryGenerateImage\": false,\n      \"summaryIncludeComments\": false,\n      \"summaryIncludeDocumentProperties\": false,\n      \"summaryIncludeFormulas\": false,\n      \"unhideVeryHiddenWorksheets\": false,\n      \"unhideWindows\": false,\n      \"unhideWorksheets\": true,\n      \"wrapText\": true\n    },\n    \"htmlProcessingOptions\": {\n      \"shrinkToFit\": false\n    },\n    \"powerPointProcessingOptions\": {\n      \"asIs\": false,\n      \"printHiddenSlides\": true,\n      \"printComments\": false,\n      \"frameSlides\": true,\n      \"scaleToFitPage\": false,\n      \"processWithStellent\": false,\n      \"outputType\": \"OutputSlides\",\n      \"slideSize\": \"LetterPaper\",\n      \"paperSize\": \"Letter\",\n      \"pageOrientation\": \"Landscape\",\n      \"slideOrientation\": \"Portrait\",\n      \"handoutOrder\": \"Horizontal\",\n      \"colorDepth\": \"EightBitColor\",\n      \"linkedContentSummary\": false,\n      \"notesAndHandouts\": {\n        \"showHeader\": true,\n        \"showHeaderAsIs\": true,\n        \"headerText\": \"\",\n        \"showPageNumber\": \"AsIs\",\n        \"showDateAndTime\": true,\n        \"updateDateAndTimeFormat\": \"Automatically\",\n        \"updateDateAndTimeAutomaticallyType\": \"ppDateTimeUseDateLastSaved\",\n        \"updateDateAndTimeAutomaticallyFormat\": \"ppDateFormatAsIs\",\n        \"fixedDateAndTimeText\": \"\",\n        \"showFooter\": true,\n        \"showFooterAsIs\": true,\n        \"footerText\": \"\"\n      },\n      \"slides\": {\n        \"showSlideNumber\": \"AsIs\",\n        \"showOnTitleSlide\": \"AsIs\",\n        \"showDateAndTime\": false,\n        \"updateDateAndTimeFormat\": \"Automatically\",\n        \"updateDateAndTimeAutomaticallyType\": \"ppDateTimeUseDateLastSaved\",\n        \"updateDateAndTimeAutomaticallyFormat\": \"ppDateFormatAsIs\",\n        \"fixedDateAndTimeText\": \"\",\n        \"showFooter\": true,\n        \"showFooterAsIs\": true,\n        \"footerText\": \"\"\n      }\n    },\n    \"pageCharacterThreshold\": 75,\n    \"languageSet\": [\n      \"English\"\n    ],\n    \"timeZoneId\": \"UTC\"\n  }\n}";
             
             UserInput.StartJobRequest = startJobRequest;
+        }
+        public static string getJobDetails(string jobID)
+        {
+            string getjobdetails = $"http://tst-suptrk034:1125/core/jobmanager/api/jobs/{jobID}";
+            return getjobdetails;
         }
     }
 

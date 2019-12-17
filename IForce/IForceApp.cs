@@ -11,6 +11,7 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Pdf.IO;
 using Newtonsoft.Json;
+using System.Timers;
 
 namespace IForce
 {
@@ -152,7 +153,7 @@ namespace IForce
             CopyAndRenameFiles(res, rchbx1);
             tokenRequest(WebRequests.authenticateRequest(), rchbx1);
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
-            MessageBox.Show("Done."); //temp
+            IForce.Logger("Checking Job Status..."); //temp
         }
 
         public static void Search(DataGridView dview1)
@@ -236,6 +237,7 @@ namespace IForce
 
                 IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusDescription);
 
+
                 StreamReader reader = new StreamReader(dataStream);
                 string responseFromServer = reader.ReadToEnd();
                 JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
@@ -277,7 +279,12 @@ namespace IForce
                 // Get the response.
                 WebResponse response = request.GetResponse();
                 dataStream = response.GetResponseStream();
+                
                     IForce.Logger("Job Creation Response: "+ ((HttpWebResponse)response).StatusDescription);
+                UserInput.Location = ((HttpWebResponse)response).Headers.Get("Location");
+                    //IForce.Logger(UserInput.Location);
+
+
                 StreamReader reader = new StreamReader(dataStream);
                // string responseFromServer = reader.ReadToEnd();
                    // IForce.Logger(responseFromServer);
@@ -293,9 +300,78 @@ namespace IForce
             {
                 IForce.Logger("Unable to create imaging Job. " + ex.Message);
             }
-                
+
+            UserInput.JobID = UserInput.Location.Split('/').Last();
+            IForce.Logger("JobID: " + UserInput.JobID);
+            SetTimer();
         }
 
+
+        private static System.Timers.Timer aTimer;
+        private static string status;
+        public static bool importStarted;
+        private static void SetTimer()
+        {
+            // Create a timer with a two second interval.
+            aTimer = new System.Timers.Timer(6000);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            if (status == "Completed")
+            {
+                aTimer.Stop();
+                if(importStarted == false)
+                {
+                    DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
+                }
+                
+            }
+            else
+            {
+                JobStatusCheck();
+            }
+            
+        }
+        public static void JobStatusCheck()
+        {
+            IForce.Logger("Checking Job Status...");
+            WebRequest request = WebRequest.Create(WebRequests.getJobDetails(UserInput.JobID));
+            request.Method = "GET";
+            request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
+            request.ContentType = "application/x-www-form-urlencoded";
+            //request.ContentLength = byteArray.Length;
+            Stream dataStream;// = request.GetRequestStream();
+           // dataStream.Write(byteArray, 0, byteArray.Length);
+           // dataStream.Close();
+            //get response
+            WebResponse response = request.GetResponse();
+            dataStream = response.GetResponseStream();
+            //MessageBox.Show("WebResponse: " + ((HttpWebResponse)response).StatusCode);
+            IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusCode);
+            
+
+            StreamReader reader = new StreamReader(dataStream);
+            string responseFromServer = reader.ReadToEnd();
+            JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
+            var data = jObject.SelectToken("data");
+            JObject jObjectChild = JObject.Parse(data.ToString());
+            var jobStatus = jObjectChild.SelectToken("status");
+            string details = jObjectChild.SelectToken("queue").ToString();
+            //MessageBox.Show(jobStatus.ToString()+ jObjectChild.SelectToken("queue").ToString());
+            IForce.Logger(jobStatus.ToString() + Environment.NewLine + details);
+            // Clean up the streams.
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+            status = jobStatus.ToString();
+            
+
+        }
 
         //end of IForceAPP class
 
@@ -327,6 +403,8 @@ namespace IForce
 
         public static void IterateDocuments(string[] filePaths)
         {
+            IForceApp.importStarted = true;
+            IForce.Logger("Starting Import...");
             BuildDatatable();
 
 
@@ -374,6 +452,7 @@ namespace IForce
                 }
 
             }
+            IForce.Logger("Import Complete");
             MessageBox.Show("Done.");
         }
     }

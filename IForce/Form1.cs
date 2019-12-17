@@ -39,25 +39,42 @@ namespace IForce
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
+
+        delegate void SetTextCallback(string text);
         //End move form
-
-
         public static void Logger(string text)
         {
-            _iforce.rchTxtBx1.AppendText(Environment.NewLine + DateTime.Now.ToString() + " " + text);
+                // InvokeRequired required compares the thread ID of the
+                // calling thread to the thread ID of the creating thread.
+                // If these threads are different, it returns true.
+                if (_iforce.rchTxtBx1.InvokeRequired)
+                {
+                    SetTextCallback d = new SetTextCallback(Logger);
+                    _iforce.Invoke(d, new object[] { text });
+                }
+                else
+                {
+                   _iforce.rchTxtBx1.AppendText(Environment.NewLine + DateTime.Now.ToString() + " " + text);
+                }
+            
         }
+
+        //public static void Logger(string text)
+        //{
+        //    _iforce.rchTxtBx1.AppendText(Environment.NewLine + DateTime.Now.ToString() + " " + text);
+        //}
         public static void ListLogger(string text)
         {
             _iforce.rchTxtBx1.AppendText(Environment.NewLine + text);
         }
 
-        private async void btnLaunch_Click(object sender, EventArgs e)
+        private void btnLaunch_Click(object sender, EventArgs e)
         {
             btnSearch.Enabled = false;
             btnConnect.Enabled = false;
             chxLstBx1.Enabled = false;
             rchTxtBx2.ReadOnly = true;
-            
+
             UpdateProperties SetInputs = new UpdateProperties();
             if (SetInputs.UpdateUserInputs(tboxServer.Text,
                                tboxDb.Text,
@@ -70,9 +87,9 @@ namespace IForce
                                tboxRevUser.Text) == true)
             {
                 IForceApp.ConnectToImage(dView1, rchTxtBx1);
-                
+
             };
-            
+
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
