@@ -286,14 +286,18 @@ namespace IForce
 
 
                 StreamReader reader = new StreamReader(dataStream);
-               // string responseFromServer = reader.ReadToEnd();
-                   // IForce.Logger(responseFromServer);
-                   // IForce.Logger("Imaging Job available in Job Manager.");
+                // string responseFromServer = reader.ReadToEnd();
+                // IForce.Logger(responseFromServer);
+                // IForce.Logger("Imaging Job available in Job Manager.");
                 // richTextBox.AppendText(responseFromServer);
 
                 //GetJobID()
                 //GetJobStatus()
                 //When Status = Complete Then
+
+                UserInput.JobID = UserInput.Location.Split('/').Last();
+                IForce.Logger("JobID: " + UserInput.JobID);
+                SetTimer();
 
             }
             catch(Exception ex)
@@ -301,9 +305,7 @@ namespace IForce
                 IForce.Logger("Unable to create imaging Job. " + ex.Message);
             }
 
-            UserInput.JobID = UserInput.Location.Split('/').Last();
-            IForce.Logger("JobID: " + UserInput.JobID);
-            SetTimer();
+          
         }
 
 
@@ -313,7 +315,7 @@ namespace IForce
         private static void SetTimer()
         {
             // Create a timer with a two second interval.
-            aTimer = new System.Timers.Timer(6000);
+            aTimer = new System.Timers.Timer(7000);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;

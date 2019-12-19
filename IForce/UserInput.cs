@@ -218,7 +218,7 @@ namespace IForce
         }
         public static string getJobDetails(string jobID)
         {
-            string getjobdetails = $"http://tst-suptrk034:1125/core/jobmanager/api/jobs/{jobID}";
+            string getjobdetails = $"https://tst-suptrk034:1125/core/jobmanager/api/jobs/{jobID}";
             return getjobdetails;
         }
     }

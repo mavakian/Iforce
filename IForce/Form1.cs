@@ -135,16 +135,7 @@ namespace IForce
             DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            Form Form2 = new Form();
-            Form2.Width = 583;
-            Form2.Height = 223;
-            Form2.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Form2.Show();
-            Form2.BackgroundImage = Properties.Resources.force;
-            
-        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -189,6 +180,16 @@ namespace IForce
                 // handle the error appropriately...
             }
 
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            Form Form2 = new Form();
+            Form2.Width = 500;
+            Form2.Height = 500;
+            Form2.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Form2.Show();
+            Form2.BackgroundImage = Properties.Resources.swat_new;
         }
     }
 }
