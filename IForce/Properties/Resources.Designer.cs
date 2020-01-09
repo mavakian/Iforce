@@ -64,7 +64,8 @@ namespace IForce.Properties {
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap force {
-            get {
+            get
+            {
                 object obj = ResourceManager.GetObject("force", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
@@ -74,10 +75,12 @@ namespace IForce.Properties {
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap swat_new {
-            get {
+            get
+            {
                 object obj = ResourceManager.GetObject("swat-new", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+
     }
 }

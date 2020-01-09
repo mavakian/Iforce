@@ -14,11 +14,14 @@ namespace IForce
         public static string ServerName { get; set; }     //= @"tst-supsql001\sup12";
         public static string ADDDatabase { get; set; }   
         public static string CaseDataase { get; set; }    //= "MJA_Eclipse_12_Case000024";
+        public static string CaseDir { get; set; } 
+        public static string IntegrationDir { get; set; }
         public static string SQLUserName { get; set; }    //= "mavakiansql";
         public static string Password { get; set; }      //= "iprotech";
         public static string CaseName { get; set; }
         public static int CPEID { get; set; }
         public static string EcapConfig { get; set; }
+        public static int DocCount { get; set; }
 
         //API
         public static string IproURL { get; set; } 
@@ -137,12 +140,25 @@ namespace IForce
             return sqlqry;
         }
 
+        public static string GetSessionID()
+        {
+            string sqlqry = $"SELECT SessionID FROM Enterprise.Session" +
+                            $"WHERE Username = '{ReviewUsername}'" +
+                            $"AND IssuedDate = (SELECT MAX(IssuedDate) FROM Enterprise.Session WHERE Username = '{ReviewUsername}')";
+            return sqlqry;
+        }
+
         //Methods
         public static void SaveSettings()
         {
             UserInput.StartJobRequest = IForce._iforce.rchTxtBx2.Text;
         }
 
+        public static void SetPaths()
+        {
+            UserInput.SourcePath  = UserInput.IntegrationDir + @"Natives\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
+            UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
+        }
         //Web Requests
         public static string StartJobRequest { get; set; }
 

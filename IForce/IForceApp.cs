@@ -15,7 +15,7 @@ using System.Timers;
 
 namespace IForce
 {
-    class IForceApp
+    partial class IForceApp
     {
 
         //Program
@@ -50,8 +50,8 @@ namespace IForce
             {
 
                 UserInput.CaseName = chxLstBx1.SelectedItem.ToString();
-                    IForce.Logger("Case: "+ UserInput.CaseName);
-                // SetCaseDatabsse();
+                IForce.Logger("Case: "+ UserInput.CaseName);
+                
                 GetCaseDetails();
             }
             else if (chxLstBx1.CheckedItems.Count > 0)
@@ -77,7 +77,8 @@ namespace IForce
                 UserInput.CPEID = (int)reader.GetValue(0);
                 UserInput.CaseName = reader.GetValue(1).ToString();
                 UserInput.CaseDataase = reader.GetValue(2).ToString();
-                UserInput.OutputPath = reader.GetValue(3).ToString() + @"\Api\";
+                UserInput.CaseDir = reader.GetValue(3).ToString();
+                UserInput.OutputPath = reader.GetValue(3).ToString() + @"\Images\API\";
                 
 
             }
@@ -86,8 +87,12 @@ namespace IForce
                 IForce.Logger("CPEID: "+UserInput.CPEID);
                 IForce.Logger("CaseName: " + UserInput.CaseName);
                 IForce.Logger("CaseDatabase: " + UserInput.CaseDataase);
-                IForce.Logger("Case Directory: " + UserInput.OutputPath);
+                IForce.Logger("Case Directory: " + UserInput.CaseDir);
             GetEcapconfig();
+            GetIntegrationDir();
+            GetUserKey();
+            UserInput.SetPaths();
+            
             ResetSettingsToUI();
         }
 
@@ -103,7 +108,7 @@ namespace IForce
             reader.Close();
             Results.Connection.Close();
                 IForce.Logger("EcapConfig Database Name: " + UserInput.EcapConfig);
-            GetIntegrationDir();
+            
         }
 
         public static void GetIntegrationDir()
@@ -113,13 +118,14 @@ namespace IForce
             SqlDataReader reader = Results.Cmd.ExecuteReader();
             while (reader.Read())
             {
-                UserInput.SourcePath = reader.GetValue(0).ToString() + @"Natives\" ;
+                UserInput.IntegrationDir = reader.GetValue(0).ToString();
+                UserInput.SourcePath = UserInput.IntegrationDir + @"Natives\";
 
             }
             reader.Close();
             Results.Connection.Close();
-                IForce.Logger("Integration Directory: " + UserInput.SourcePath);
-            GetUserKey();
+                IForce.Logger("Integration Directory: " + UserInput.IntegrationDir);
+            
         }
         public static void GetUserKey()
         {
@@ -140,9 +146,15 @@ namespace IForce
             WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath);
             IForce._iforce.rchTxtBx2.Text = UserInput.StartJobRequest;
         }
-
+        public static void ResetSettingsToUiOnly()
+        {
+            //WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath);
+            IForce._iforce.rchTxtBx2.Text = UserInput.StartJobRequest;
+        }
         public static void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
         {
+            //UserInput.SetPaths();
+            //ResetSettingsToUI();
             IForce.Logger("Native File Copy In Progress: " + UserInput.SourcePath);
             DataTable res = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.GetDocids());
@@ -151,6 +163,10 @@ namespace IForce
             Results.Connection.Close();
             dview1.DataSource = res;
             CopyAndRenameFiles(res, rchbx1);
+
+            //UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
+            //ResetSettingsToUI();
+
             tokenRequest(WebRequests.authenticateRequest(), rchbx1);
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
@@ -158,6 +174,7 @@ namespace IForce
 
         public static void Search(DataGridView dview1)
         {
+            
             DataTable srch = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.GetDocids());
             try
@@ -165,8 +182,9 @@ namespace IForce
                 Results.Connection.Open();
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
+                UserInput.DocCount = srch.Rows.Count;
                 dview1.DataSource = srch;
-                
+                IForce._iforce.lblCount.Text = UserInput.DocCount.ToString();
             }
             catch (Exception ex)
             {
@@ -189,6 +207,7 @@ namespace IForce
 
             Parallel.ForEach(docInfos, x =>
             {
+                
                 try
                 {
                     //FileName changing and copy goes in here x is each docInfo
@@ -329,7 +348,11 @@ namespace IForce
                 aTimer.Stop();
                 if(importStarted == false)
                 {
-                    DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
+                    ReadDisk files = new ReadDisk();
+                    DocumentIterator importDocs = new DocumentIterator(files.getFilePaths(UserInput.OutputPath));
+                    //DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
+                    status = string.Empty;
+                
                 }
                 
             }
@@ -381,10 +404,14 @@ namespace IForce
 
 
 
-    public static class DocumentIterator
+    public class DocumentIterator
     {
-        public static DataTable ResultsTable;
+        public DocumentIterator(string[] _path)
+        {
+            IterateDocuments(_path);
+        }
 
+        public static DataTable ResultsTable;
 
         public static void BuildDatatable()
         {
@@ -408,14 +435,14 @@ namespace IForce
             IForceApp.importStarted = true;
             IForce.Logger("Starting Import...");
             BuildDatatable();
+            
 
 
             foreach (string file in filePaths)
             {
                 string begdoc = Path.GetFileNameWithoutExtension(file);
                 long filesizeKb = (new FileInfo(file).Length) / 1024;
-                //RchBox1.AppendText($"\r\n {begdoc}");
-
+               
                 try
                 {
                     using (var sourceDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import))
@@ -448,14 +475,45 @@ namespace IForce
                 }
                 catch (Exception ex)
                 {
-
+                    IForce.Logger(ex.Message);
                     MessageBox.Show(ex.ToString());
 
                 }
 
             }
             IForce.Logger("Import Complete");
+            IForce.Logger($"Deleting temporary native file source: {UserInput.SourcePath}");
+            DeleteNatives(UserInput.SourcePath);
+            IForceApp.importStarted = false;
+
+            
+            IForce._iforce.chxLstBx1.Invoke(new MethodInvoker(delegate ()
+            {
+
+                
+            IForce._iforce.chxLstBx1.SetItemCheckState(IForce._iforce.chxLstBx1.SelectedIndex, CheckState.Unchecked);
+            IForce._iforce.chxLstBx1.ClearSelected();
+            }));
+            
+
             MessageBox.Show("Done.");
+
+
+
+        }
+
+        public static void DeleteNatives(string path)
+        {
+            string dir = path;
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch(Exception ex)
+            {
+                IForce.Logger($"Unable to delete temp natives: {path}" + ex.Message);
+            }
+
         }
     }
 

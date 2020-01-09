@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace IForce
 {
@@ -74,6 +75,7 @@ namespace IForce
             btnConnect.Enabled = false;
             chxLstBx1.Enabled = false;
             rchTxtBx2.ReadOnly = true;
+            btnLaunch.Enabled = false;
 
             UpdateProperties SetInputs = new UpdateProperties();
             if (SetInputs.UpdateUserInputs(tboxServer.Text,
@@ -84,11 +86,16 @@ namespace IForce
                                tboxClientID.Text,
                                tboxSecret.Text,
                                tboxResultsID.Text,
-                               tboxRevUser.Text) == true)
+                               tboxRevUser.Text,
+                               chxLstBx1) == true)
             {
                 IForceApp.ConnectToImage(dView1, rchTxtBx1);
 
             };
+            btnSearch.Enabled = true;
+            chxLstBx1.Enabled = true;
+            btnLaunch.Enabled = true;
+            
 
         }
 
@@ -124,7 +131,7 @@ namespace IForce
 
 
 
-        private void chxLstBx1_ItemCheck(object sender, ItemCheckEventArgs e)
+        public void chxLstBx1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             IForceApp.SetCaseName(chxLstBx1, e);
                 
@@ -132,7 +139,8 @@ namespace IForce
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
+           ReadDisk files = new ReadDisk();
+           new DocumentIterator(files.getFilePaths(UserInput.OutputPath));
         }
 
 
@@ -191,5 +199,17 @@ namespace IForce
             Form2.Show();
             Form2.BackgroundImage = Properties.Resources.swat_new;
         }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            //executeEclipseSearch();
+        }
+
+        private void btnSaveLog_Click(object sender, EventArgs e)
+        {
+            IForceApp.SaveLog();
+        }
+
+        
     }
 }

@@ -24,9 +24,9 @@ namespace IForce
 
     }
 
-    public static class ReadDisk
+    public class ReadDisk
     {
-        public static string[] getFilePaths(string sourcePath)
+        public string[] getFilePaths(string sourcePath)
         {
             string[] filePaths = Directory.GetFiles(sourcePath, "*.pdf", SearchOption.AllDirectories);
             return filePaths;

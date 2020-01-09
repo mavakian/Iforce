@@ -10,16 +10,16 @@ namespace IForce
 {
     class UpdateProperties
     {
-        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url, string clientid, string secret, string id, string rvwuser)
+        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url, string clientid, string secret, string id, string rvwuser, CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
                     pw == String.Empty || url == String.Empty || clientid == String.Empty ||
-                    secret == String.Empty || id == String.Empty || rvwuser == String.Empty)
+                    secret == String.Empty || id == String.Empty || rvwuser == String.Empty || chx.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("One or more fields are empty. Please fill all fields");
+                    MessageBox.Show("One or more fields are empty. Please fill all fields and select a case.");
 
                 }
                 else
