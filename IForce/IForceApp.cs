@@ -167,7 +167,7 @@ namespace IForce
             //UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
             //ResetSettingsToUI();
 
-            tokenRequest(WebRequests.authenticateRequest(), rchbx1);
+            TokenRequest(WebRequests.authenticateRequest(), rchbx1);
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
         }
@@ -235,7 +235,7 @@ namespace IForce
         }
 
      
-        public static void tokenRequest(string _postdata, RichTextBox richTextBox)
+        public static void TokenRequest(string _postdata, RichTextBox richTextBox)
         {
             try
             {
@@ -398,6 +398,25 @@ namespace IForce
 
         }
 
+        public static void SaveLog()
+        {
+            // Create a SaveFileDialog to request a path and file name to save to.
+            SaveFileDialog saveFile1 = new SaveFileDialog();
+
+            // Initialize the SaveFileDialog to specify the RTF extension for the file.
+            saveFile1.DefaultExt = "*.txt";
+            saveFile1.Filter = "TXT Files|*.txt";
+
+            // Determine if the user selected a file name from the saveFileDialog.
+            if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+               saveFile1.FileName.Length > 0)
+            {
+                // Save the contents of the RichTextBox into the file.
+                IForce._iforce.rchTxtBx1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
+            }
+        }
+
+
         //end of IForceAPP class
 
     }
@@ -481,24 +500,25 @@ namespace IForce
                 }
 
             }
+
             IForce.Logger("Import Complete");
             IForce.Logger($"Deleting temporary native file source: {UserInput.SourcePath}");
             DeleteNatives(UserInput.SourcePath);
             IForceApp.importStarted = false;
 
-            
             IForce._iforce.chxLstBx1.Invoke(new MethodInvoker(delegate ()
             {
-
-                
-            IForce._iforce.chxLstBx1.SetItemCheckState(IForce._iforce.chxLstBx1.SelectedIndex, CheckState.Unchecked);
-            IForce._iforce.chxLstBx1.ClearSelected();
+                IForce._iforce.chxLstBx1.SetItemCheckState(IForce._iforce.chxLstBx1.SelectedIndex, CheckState.Unchecked);
+                IForce._iforce.chxLstBx1.ClearSelected();
+                IForce._iforce.btnSearch.Enabled = true;
+                IForce._iforce.chxLstBx1.Enabled = true;
+                IForce._iforce.btnLaunch.Enabled = true;
+                IForce._iforce.btnImport.Enabled = true;
+                IForce._iforce.rchTxtBx2.ReadOnly = false;
             }));
             
 
             MessageBox.Show("Done.");
-
-
 
         }
 

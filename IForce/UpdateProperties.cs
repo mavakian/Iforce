@@ -45,15 +45,15 @@ namespace IForce
             return success;
         }
 
-        public bool UpdateSearchInputs(string server, string db, string sqluser, string pw, string id)
+        public bool UpdateSearchInputs(string server, string db, string sqluser, string pw, string id, CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
-                    pw == String.Empty || id == String.Empty)
+                    pw == String.Empty || id == String.Empty || chx.SelectedItems.Count == 0)
                 {
-                    MessageBox.Show("One or more fields are empty. Please fill all fields");
+                    MessageBox.Show("One or more fields are empty. Please fill all fields and select a case");
                 }
                 else
                 {

@@ -76,6 +76,7 @@ namespace IForce
             chxLstBx1.Enabled = false;
             rchTxtBx2.ReadOnly = true;
             btnLaunch.Enabled = false;
+            
 
             UpdateProperties SetInputs = new UpdateProperties();
             if (SetInputs.UpdateUserInputs(tboxServer.Text,
@@ -92,9 +93,7 @@ namespace IForce
                 IForceApp.ConnectToImage(dView1, rchTxtBx1);
 
             };
-            btnSearch.Enabled = true;
-            chxLstBx1.Enabled = true;
-            btnLaunch.Enabled = true;
+           
             
 
         }
@@ -106,7 +105,8 @@ namespace IForce
                                tboxDb.Text,
                                tboxSQLUser.Text,
                                tboxPassword.Text,
-                               tboxResultsID.Text) == true)
+                               tboxResultsID.Text,
+                               chxLstBx1) == true)
                               
             {
                 IForceApp.Search(dView1);
@@ -134,13 +134,28 @@ namespace IForce
         public void chxLstBx1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             IForceApp.SetCaseName(chxLstBx1, e);
-                
+            btnImport.Enabled = true;
+
         }
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-           ReadDisk files = new ReadDisk();
-           new DocumentIterator(files.getFilePaths(UserInput.OutputPath));
+            if (chxLstBx1.SelectedItems.Count > 0)
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                fbd.Description = $"Choose a PDF image folder to import into case {UserInput.CaseName}";
+                fbd.ShowNewFolderButton = true;
+                fbd.SelectedPath = UserInput.CaseDir;
+
+
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+
+                    ReadDisk files = new ReadDisk();
+                    new DocumentIterator(files.getFilePaths(fbd.SelectedPath));
+                }
+            }
+           
         }
 
 
