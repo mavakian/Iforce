@@ -10,14 +10,13 @@ namespace IForce
 {
     class UpdateProperties
     {
-        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url, string clientid, string secret, string id, string rvwuser, CheckedListBox chx)
+        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url, CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
-                    pw == String.Empty || url == String.Empty || clientid == String.Empty ||
-                    secret == String.Empty || id == String.Empty || rvwuser == String.Empty || chx.SelectedItems.Count == 0)
+                    pw == String.Empty || url == String.Empty ||  chx.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("One or more fields are empty. Please fill all fields and select a case.");
 
@@ -29,10 +28,7 @@ namespace IForce
                     UserInput.SQLUserName = sqluser;
                     UserInput.Password = pw;
                     UserInput.IproURL = url;
-                    UserInput.Client_ID = clientid;
-                    UserInput.Client_Secret = secret;
-                    UserInput.ResultsID = Convert.ToInt32(id);
-                    UserInput.ReviewUsername = rvwuser;
+                    
                     success = true;
                 }
 
@@ -45,13 +41,13 @@ namespace IForce
             return success;
         }
 
-        public bool UpdateSearchInputs(string server, string db, string sqluser, string pw, string id, CheckedListBox chx)
+        public bool UpdateSearchInputs(string server, string db, string sqluser, string pw, CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
-                    pw == String.Empty || id == String.Empty || chx.SelectedItems.Count == 0)
+                    pw == String.Empty ||  chx.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("One or more fields are empty. Please fill all fields and select a case");
                 }
@@ -61,7 +57,7 @@ namespace IForce
                     UserInput.ADDDatabase = db;
                     UserInput.SQLUserName = sqluser;
                     UserInput.Password = pw;
-                    UserInput.ResultsID = Convert.ToInt32(id);
+                    
                     success = true;
                 }
 

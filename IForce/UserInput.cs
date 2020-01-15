@@ -11,34 +11,34 @@ namespace IForce
 {
    public static class UserInput
     {   //SQL
-        public static string ServerName { get; set; }     //= @"tst-supsql001\sup12";
+        public static string ServerName { get; set; } 
         public static string ADDDatabase { get; set; }   
-        public static string CaseDataase { get; set; }    //= "MJA_Eclipse_12_Case000024";
+        public static string CaseDataase { get; set; }    
         public static string CaseDir { get; set; } 
         public static string IntegrationDir { get; set; }
-        public static string SQLUserName { get; set; }    //= "mavakiansql";
-        public static string Password { get; set; }      //= "iprotech";
+        public static string SQLUserName { get; set; }    
+        public static string Password { get; set; }      
         public static string CaseName { get; set; }
         public static int CPEID { get; set; }
         public static string EcapConfig { get; set; }
         public static int DocCount { get; set; }
 
         //API
-        public static string IproURL { get; set; } 
-        public static string Client_ID { get; set; }
-        public static string Client_Secret { get; set; }
+        public static string IproURL { get; set; }
+        public static string Client_ID { get; set; } = "iforce";
+        public static string Client_Secret { get; set; } = "iforce";
         public static string AcquiredToken { get; set; }
         public static string Response { get; set; }
         public static string Request { get; set; }
         public static string Location { get; set; }
         public static string JobID { get; set; }
         //Paths
-        public static string SourcePath { get; set; } //= @"\\testing.local\dfs\SupportTestRacks\TST-SUPTRK012\Integration\34"; //This could be the integration directory
+        public static string SourcePath { get; set; } //This should be the integration directory
         public static string OutputPath { get; set; } //This should be the case directory 
         //Review
-        public static int ResultsID { get; set; } = 1; //search resuts id from CaseDB.UserTables.SearchResultsUser[Dim_User.UserID]
+        public static int ResultsID { get; set; } //search resuts id from CaseDB.UserTables.SearchResultsUser[Dim_User.UserID]
         public static string ReviewUsername { get; set; }
-        public static int UserID { get; set; } = 1;  
+        public static int UserID { get; set; }  
         
         //Queries
 
@@ -66,12 +66,12 @@ namespace IForce
             return sqlqry;
         }
 
-        public static string GetDocids()
+        public static string GetDocids(int userId, int resultsId)
         {
             string sqlqry = $"SELECT R1.DocId, BEGDOC, Native, NativeFileExtension " +
-                            $"FROM[UserTables].[SearchResults{UserInput.UserID}] R1 " +
+                            $"FROM[UserTables].[SearchResults{userId}] R1 " +
                             $"JOIN vDocumentFields DF  WITH(NOLOCK) ON DF.DocId = R1.DocId " +
-                            $"WHERE RESULTSID IN ({UserInput.ResultsID})";
+                            $"WHERE RESULTSID IN ({resultsId})";
             return sqlqry;
         }
 
@@ -87,7 +87,7 @@ namespace IForce
 
         public static string GetUserId()
         {
-            string sqlqry = $"SELECT UserKey FROM ActivityTracking.DIM_User WHERE UserName = '{UserInput.ReviewUsername}'";
+            string sqlqry = $"SELECT UserKey FROM ActivityTracking.DIM_User WHERE UserName = '{UserInput.Client_ID}'";
             return sqlqry;
         }
 
@@ -142,9 +142,18 @@ namespace IForce
 
         public static string GetSessionID()
         {
-            string sqlqry = $"SELECT SessionID FROM Enterprise.Session" +
-                            $"WHERE Username = '{ReviewUsername}'" +
+            string sqlqry = $"SELECT SessionID FROM Enterprise.Session " +
+                            $"WHERE Username = '{ReviewUsername}' " +
                             $"AND IssuedDate = (SELECT MAX(IssuedDate) FROM Enterprise.Session WHERE Username = '{ReviewUsername}')";
+            return sqlqry;
+        }
+
+        public static string CheckForExistingImages()
+        {
+            string sqlqry = $"SELECT DP.Docid, Imagekey FROM dbo.DocumentPages DP " + 
+                            $"JOIN [UserTables].[SearchResults{UserInput.UserID}] R on R.Docid = DP.Docid " +
+                            $"WHERE ResultsID = {UserInput.ResultsID} " +
+                            $"ORDER BY DP.Docid ASC";
             return sqlqry;
         }
 

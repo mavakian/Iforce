@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
+
 
 namespace IForce
 {
@@ -71,8 +71,9 @@ namespace IForce
 
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-            btnSearch.Enabled = false;
+            btnAPISearch.Enabled = false;
             btnConnect.Enabled = false;
+            btnImport.Enabled = false;
             chxLstBx1.Enabled = false;
             rchTxtBx2.ReadOnly = true;
             btnLaunch.Enabled = false;
@@ -84,10 +85,6 @@ namespace IForce
                                tboxSQLUser.Text,
                                tboxPassword.Text,
                                tboxURL.Text,
-                               tboxClientID.Text,
-                               tboxSecret.Text,
-                               tboxResultsID.Text,
-                               tboxRevUser.Text,
                                chxLstBx1) == true)
             {
                 IForceApp.ConnectToImage(dView1, rchTxtBx1);
@@ -105,11 +102,11 @@ namespace IForce
                                tboxDb.Text,
                                tboxSQLUser.Text,
                                tboxPassword.Text,
-                               tboxResultsID.Text,
+                               //tboxResultsID.Text,
                                chxLstBx1) == true)
                               
             {
-                IForceApp.Search(dView1);
+                //IForceApp.Search(dView1);
             };
                    
         }
@@ -134,6 +131,7 @@ namespace IForce
         public void chxLstBx1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             IForceApp.SetCaseName(chxLstBx1, e);
+
             btnImport.Enabled = true;
 
         }
@@ -154,6 +152,10 @@ namespace IForce
                     ReadDisk files = new ReadDisk();
                     new DocumentIterator(files.getFilePaths(fbd.SelectedPath));
                 }
+            }
+            else
+            {
+                MessageBox.Show("Select a case.");
             }
            
         }
@@ -212,12 +214,22 @@ namespace IForce
             Form2.Height = 500;
             Form2.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Form2.Show();
-            Form2.BackgroundImage = Properties.Resources.swat_new;
+            Form2.BackgroundImage = Properties.Resources.new_swat_logo2;
+            
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void APISearch_Click_1(object sender, EventArgs e)
         {
-            //executeEclipseSearch();
+            UpdateProperties SetInputs = new UpdateProperties();
+            if (SetInputs.UpdateSearchInputs(tboxServer.Text,
+                               tboxDb.Text,
+                               tboxSQLUser.Text,
+                               tboxPassword.Text,
+                               chxLstBx1) == true)
+
+            {
+                IForceApp.ExecuteEclipseSearch();
+            }; 
         }
 
         private void btnSaveLog_Click(object sender, EventArgs e)
@@ -225,6 +237,6 @@ namespace IForce
             IForceApp.SaveLog();
         }
 
-        
+
     }
 }

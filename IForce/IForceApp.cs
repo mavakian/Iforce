@@ -10,8 +10,9 @@ using System.Data.SqlClient;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Pdf.IO;
-using Newtonsoft.Json;
 using System.Timers;
+using System.Net.Http;
+using IdentityModel.Client;
 
 namespace IForce
 {
@@ -50,8 +51,7 @@ namespace IForce
             {
 
                 UserInput.CaseName = chxLstBx1.SelectedItem.ToString();
-                IForce.Logger("Case: "+ UserInput.CaseName);
-                
+                IForce.Logger("Case: "+ UserInput.CaseName);                
                 GetCaseDetails();
             }
             else if (chxLstBx1.CheckedItems.Count > 0)
@@ -127,20 +127,25 @@ namespace IForce
                 IForce.Logger("Integration Directory: " + UserInput.IntegrationDir);
             
         }
-        public static void GetUserKey()
+        public static int GetUserKey()
         {
+            int Userkey = 0;
             OpenSQL Results = new OpenSQL(UserInput.GetUserId());
             Results.Connection.Open();
             SqlDataReader reader = Results.Cmd.ExecuteReader();
             while (reader.Read())
             {
-                UserInput.UserID = (int)reader.GetValue(0);
+                Userkey = (int)reader.GetValue(0);
+                UserInput.UserID = Userkey;                
             }
             reader.Close();
-                IForce.Logger("UserID: " + UserInput.UserID);
             Results.Connection.Close();
+            if (Userkey == 0)
+            {
+                IForce.Logger("User name is invalid.");
+            }
+            return Userkey;
         }
-
         public static void ResetSettingsToUI()
         {
             WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath);
@@ -157,7 +162,7 @@ namespace IForce
             //ResetSettingsToUI();
             IForce.Logger("Native File Copy In Progress: " + UserInput.SourcePath);
             DataTable res = new DataTable();
-            OpenSQL Results = new OpenSQL(UserInput.GetDocids());
+            OpenSQL Results = new OpenSQL(UserInput.GetDocids(UserInput.UserID, UserInput.ResultsID));
             Results.Connection.Open();
             res.Load(Results.Cmd.ExecuteReader());
             Results.Connection.Close();
@@ -166,17 +171,17 @@ namespace IForce
 
             //UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
             //ResetSettingsToUI();
-
-            TokenRequest(WebRequests.authenticateRequest(), rchbx1);
+            _TokenRequest().GetAwaiter().GetResult();
+            //TokenRequest(WebRequests.authenticateRequest(), rchbx1);
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
         }
 
-        public static void Search(DataGridView dview1)
+        public static void Search(DataGridView dview1, int userId, int resultsId)
         {
             
             DataTable srch = new DataTable();
-            OpenSQL Results = new OpenSQL(UserInput.GetDocids());
+            OpenSQL Results = new OpenSQL(UserInput.GetDocids(userId, resultsId));
             try
             {
                 Results.Connection.Open();
@@ -234,6 +239,36 @@ namespace IForce
 
         }
 
+
+        public static async Task _TokenRequest()
+        {
+            IForce.Logger("Acquiring authorization token.");
+            var identityServerUrl = UserInput.IproURL +"/auth";
+            var client = new HttpClient();
+            var discoveryRequest = new DiscoveryDocumentRequest //WSell known Config - tells you what endpoint to hit
+            {
+                Address = identityServerUrl,
+                Policy = new DiscoveryPolicy
+                {
+                    RequireHttps = true
+                }
+            };
+            var discoveryDocument =  await client.GetDiscoveryDocumentAsync(discoveryRequest);
+                if (discoveryDocument.IsError) throw new Exception(discoveryDocument.Error);
+            var tokenEndpoint = discoveryDocument.TokenEndpoint;
+
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest //requests the token
+            {
+                Address = tokenEndpoint,
+                ClientId = "myclientid",
+                ClientSecret = "myclientsecret",
+                Scope = "ipro.api ipro.superadmin"
+            });
+            var accessToken = tokenResponse.AccessToken;
+            UserInput.AcquiredToken = accessToken;
+            IForce.Logger("Token Acquired.");
+
+        }
      
         public static void TokenRequest(string _postdata, RichTextBox richTextBox)
         {
@@ -284,7 +319,7 @@ namespace IForce
         {
             try
             {
-                    IForce.Logger("Job Creation Request Initiated.");
+                IForce.Logger("Job Creation Request Initiated.");
                 WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.jobStartURLsuffix);
                 request.Method = "POST";
                 request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
@@ -299,7 +334,7 @@ namespace IForce
                 WebResponse response = request.GetResponse();
                 dataStream = response.GetResponseStream();
                 
-                    IForce.Logger("Job Creation Response: "+ ((HttpWebResponse)response).StatusDescription);
+                IForce.Logger("Job Creation Response: "+ ((HttpWebResponse)response).StatusDescription);
                 UserInput.Location = ((HttpWebResponse)response).Headers.Get("Location");
                     //IForce.Logger(UserInput.Location);
 
@@ -416,7 +451,40 @@ namespace IForce
             }
         }
 
+        public static bool CheckForExistingImages()
+        {
+            bool okToContinue = false;
+            DataTable ResultsTable;
+            DataTable srch = new DataTable();
+            OpenSQL Results = new OpenSQL(UserInput.CheckForExistingImages());
+            try
+            {
+                Results.Connection.Open();
+                srch.Load(Results.Cmd.ExecuteReader());
+                Results.Connection.Close();
+                ResultsTable = srch;
 
+                var hasimages = ResultsTable.AsEnumerable().Take(5);
+                var hasimages100 = ResultsTable.AsEnumerable().Take(100);
+
+                if (ResultsTable.Rows.Count > 0)
+                {
+                    IForce._iforce.btnLaunch.Enabled = false;
+                    MessageBox.Show("Images already exist. Delete pages in search and try again" );
+                    IForce.Logger("Images already exist.");
+                    return okToContinue;
+                }
+                okToContinue = true;
+                return okToContinue;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return okToContinue;
+            }
+
+            
+        }
         //end of IForceAPP class
 
     }
@@ -435,7 +503,7 @@ namespace IForce
         public static void BuildDatatable()
         {
             DataTable srch = new DataTable();
-            OpenSQL Results = new OpenSQL(UserInput.GetDocids());
+            OpenSQL Results = new OpenSQL(UserInput.GetDocids(UserInput.UserID, UserInput.ResultsID));
             try
             {
                 Results.Connection.Open();
@@ -510,7 +578,7 @@ namespace IForce
             {
                 IForce._iforce.chxLstBx1.SetItemCheckState(IForce._iforce.chxLstBx1.SelectedIndex, CheckState.Unchecked);
                 IForce._iforce.chxLstBx1.ClearSelected();
-                IForce._iforce.btnSearch.Enabled = true;
+                IForce._iforce.btnAPISearch.Enabled = true;
                 IForce._iforce.chxLstBx1.Enabled = true;
                 IForce._iforce.btnLaunch.Enabled = true;
                 IForce._iforce.btnImport.Enabled = true;
