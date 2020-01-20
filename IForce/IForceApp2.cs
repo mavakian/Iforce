@@ -26,7 +26,7 @@ namespace IForce
                 if (CheckForExistingImages())
                 {
                     IForce._iforce.btnLaunch.Enabled = true;
-
+                    IForce.Logger("No images found. OK to proceed.");
                 }
                 else
                 {
