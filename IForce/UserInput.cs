@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
 using System.Data.SqlClient;
-using System.Net;
+
 
 namespace IForce
 {
@@ -16,15 +11,18 @@ namespace IForce
         public static string CaseDataase { get; set; }    
         public static string CaseDir { get; set; } 
         public static string IntegrationDir { get; set; }
-        public static string SQLUserName { get; set; }    
-        public static string Password { get; set; }      
+        public static string SQLUserName { get; set; }
+        public static string Password { get; set; }
         public static string CaseName { get; set; }
         public static int CPEID { get; set; }
         public static string EcapConfig { get; set; }
         public static int DocCount { get; set; }
 
+
         //API
-        public static string IproURL { get; set; }
+        public static string IproURL { get; set; }  // = "https://tst-suptrk034:1125";
+        public static string IproSvcURL { get; set; }
+        public static string IdentURL { get; set;  }
         public static string Client_ID { get; set; } = "iforce";
         public static string Client_Secret { get; set; } = "iforce";
         public static string AcquiredToken { get; set; }
@@ -41,6 +39,13 @@ namespace IForce
         public static int UserID { get; set; }  
         
         //Queries
+        public static string GetInstalledComponents()
+        {
+            string sqlqry = $"SELECT ICT.[Descr], IC.[Endpoint] FROM Enterprise.InstalledComponent IC " +
+                            $"JOIN Enterprise.InstalledComponentType ICT ON ICT.InstalledComponentTypeId = IC.InstalledComponentTypeId " +
+                            $"WHERE ICT.Descr IN  ( 'ADDService', 'EclipseWebService')";
+            return sqlqry;
+        }
 
         public static string GetCaseName()
         {
@@ -184,6 +189,8 @@ namespace IForce
 
         public OpenSQL(string qry)
         {
+           
+
             SqlConnectionStringBuilder conStr = new SqlConnectionStringBuilder
             {
                 ["Data Source"] = UserInput.ServerName,
@@ -202,6 +209,7 @@ namespace IForce
 
         public OpenSQL(string qry, string adddb)
         {
+            
             SqlConnectionStringBuilder conStr = new SqlConnectionStringBuilder
             {
                 ["Data Source"] = UserInput.ServerName,

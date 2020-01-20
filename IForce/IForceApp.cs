@@ -13,6 +13,9 @@ using PdfSharp.Pdf.IO;
 using System.Timers;
 using System.Net.Http;
 using IdentityModel.Client;
+using System.Configuration;
+
+
 
 namespace IForce
 {
@@ -20,6 +23,19 @@ namespace IForce
     {
 
         //Program
+        public static void UpdateTextFieldsFromConfig()
+        {
+            try
+            {
+                IForce._iforce.tboxServer.Text = ConfigurationManager.AppSettings.Get("Server");
+                IForce._iforce.tboxDb.Text = ConfigurationManager.AppSettings.Get("Database");
+                IForce._iforce.tboxSQLUser.Text = ConfigurationManager.AppSettings.Get("User");
+                // IForce._iforce.tboxPassword.Text = ConfigurationManager.AppSettings.Get("Password");
+                IForce._iforce.tboxURL.Text = ConfigurationManager.AppSettings.Get("IproUrl");
+            }
+            catch { }
+        }
+
         public static void GetDatabaseList(CheckedListBox chxLstBx1)
         {
            
@@ -88,12 +104,27 @@ namespace IForce
                 IForce.Logger("CaseName: " + UserInput.CaseName);
                 IForce.Logger("CaseDatabase: " + UserInput.CaseDataase);
                 IForce.Logger("Case Directory: " + UserInput.CaseDir);
+            GetInstalledComponents();
             GetEcapconfig();
             GetIntegrationDir();
             GetUserKey();
             UserInput.SetPaths();
             
             ResetSettingsToUI();
+        }
+        public static void GetInstalledComponents()
+        {
+            OpenSQL Results = new OpenSQL(UserInput.GetInstalledComponents(), UserInput.ADDDatabase);
+            Results.Connection.Open();
+            DataTable tbl = new DataTable();
+            tbl.Load(Results.Cmd.ExecuteReader());
+            DataRow[] row = tbl.Select("Descr = 'ADDService'");
+            UserInput.IproSvcURL = row[0]["Endpoint"].ToString();
+            row = tbl.Select("Descr = 'EclipseWebService'");
+            UserInput.IproURL = row[0]["Endpoint"].ToString();
+
+
+
         }
 
         public static void GetEcapconfig()
@@ -171,7 +202,7 @@ namespace IForce
 
             //UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
             //ResetSettingsToUI();
-            _TokenRequest().GetAwaiter().GetResult();
+            UserInput.AcquiredToken = _TokenRequest().GetAwaiter().GetResult();
             //TokenRequest(WebRequests.authenticateRequest(), rchbx1);
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
@@ -240,87 +271,97 @@ namespace IForce
         }
 
 
-        public static async Task _TokenRequest()
-        {
-            IForce.Logger("Acquiring authorization token.");
-            var identityServerUrl = UserInput.IproURL +"/auth";
-            var client = new HttpClient();
-            var discoveryRequest = new DiscoveryDocumentRequest //WSell known Config - tells you what endpoint to hit
-            {
-                Address = identityServerUrl,
-                Policy = new DiscoveryPolicy
-                {
-                    RequireHttps = true
-                }
-            };
-            var discoveryDocument =  await client.GetDiscoveryDocumentAsync(discoveryRequest);
-                if (discoveryDocument.IsError) throw new Exception(discoveryDocument.Error);
-            var tokenEndpoint = discoveryDocument.TokenEndpoint;
-
-            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest //requests the token
-            {
-                Address = tokenEndpoint,
-                ClientId = "myclientid",
-                ClientSecret = "myclientsecret",
-                Scope = "ipro.api ipro.superadmin"
-            });
-            var accessToken = tokenResponse.AccessToken;
-            UserInput.AcquiredToken = accessToken;
-            IForce.Logger("Token Acquired.");
-
-        }
-     
-        public static void TokenRequest(string _postdata, RichTextBox richTextBox)
+        public static async Task<string> _TokenRequest()
         {
             try
             {
                 IForce.Logger("Acquiring authorization token.");
+                var identityServerUrl = UserInput.IdentURL + "/auth";
+                var client = new HttpClient();
+                var discoveryRequest = new DiscoveryDocumentRequest //Well known Config - tells you what endpoint to hit
+                {
+                    Address = identityServerUrl,
+                    Policy = new DiscoveryPolicy
+                    {
+                        RequireHttps = true
+                    }
+                };
+                var discoveryDocument = client.GetDiscoveryDocumentAsync(discoveryRequest).GetAwaiter().GetResult();
+                if (discoveryDocument.IsError) throw new Exception(discoveryDocument.Error);
+                var tokenEndpoint = discoveryDocument.TokenEndpoint;
 
-                WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
-                request.Method = "POST";
-                string postData = _postdata;
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-                //get response
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
+                var tokenResponse = client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest //requests the token
+                {
+                    Address = tokenEndpoint,
+                    ClientId = "iforce",
+                    ClientSecret = "iforce",
+                    Scope = "ipro.api ipro.superadmin"
+                })
+                .GetAwaiter().GetResult();
 
-                IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusDescription);
+                var accessToken = tokenResponse.AccessToken;
+                IForce.Logger("Token Acquired.");
+                return accessToken;
+            }
+            catch (Exception ex)
+            {
+                IForce.Logger(ex.Message);
+                throw;
+            }
+
+        }
+     
+        //public static void TokenRequest(string _postdata, RichTextBox richTextBox)
+        //{
+        //    try
+        //    {
+        //        IForce.Logger("Acquiring authorization token.");
+
+        //        WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
+        //        request.Method = "POST";
+        //        string postData = _postdata;
+        //        byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+        //        request.ContentType = "application/x-www-form-urlencoded";
+        //        request.ContentLength = byteArray.Length;
+        //        Stream dataStream = request.GetRequestStream();
+        //        dataStream.Write(byteArray, 0, byteArray.Length);
+        //        dataStream.Close();
+        //        //get response
+        //        WebResponse response = request.GetResponse();
+        //        dataStream = response.GetResponseStream();
+
+        //        IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusDescription);
 
 
-                StreamReader reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-                JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
-                var token = jObject.SelectToken("access_token");
-                UserInput.AcquiredToken = token.ToString();
-                    IForce.Logger("Token acquired.");
-                // Clean up the streams.
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-                //Start call for job start
-                //StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
+        //        StreamReader reader = new StreamReader(dataStream);
+        //        string responseFromServer = reader.ReadToEnd();
+        //        JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
+        //        var token = jObject.SelectToken("access_token");
+        //        UserInput.AcquiredToken = token.ToString();
+        //            IForce.Logger("Token acquired.");
+        //        // Clean up the streams.
+        //        reader.Close();
+        //        dataStream.Close();
+        //        response.Close();
+        //        //Start call for job start
+        //        //StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
                 
 
 
-            }
-            catch(Exception ex)
-            {
-                IForce.Logger("Token acquisition failed. "+ ex.Message);
-            }
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        IForce.Logger("Token acquisition failed. "+ ex.Message);
+        //    }
                
-        }
+        //}
 
         public static void StartImagingJob(string _postdata, RichTextBox richTextBox)
         {
             try
             {
                 IForce.Logger("Job Creation Request Initiated.");
-                WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.jobStartURLsuffix);
+                WebRequest request = WebRequest.Create(UserInput.IdentURL + WebRequests.jobStartURLsuffix);
                 request.Method = "POST";
                 request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
                 string postData = _postdata;
@@ -332,14 +373,14 @@ namespace IForce
                 dataStream.Close();
                 // Get the response.
                 WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
+               // dataStream = response.GetResponseStream();
                 
                 IForce.Logger("Job Creation Response: "+ ((HttpWebResponse)response).StatusDescription);
                 UserInput.Location = ((HttpWebResponse)response).Headers.Get("Location");
                     //IForce.Logger(UserInput.Location);
 
 
-                StreamReader reader = new StreamReader(dataStream);
+               // StreamReader reader = new StreamReader(dataStream);
                 // string responseFromServer = reader.ReadToEnd();
                 // IForce.Logger(responseFromServer);
                 // IForce.Logger("Imaging Job available in Job Manager.");

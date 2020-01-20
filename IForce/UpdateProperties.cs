@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
 using System.Windows.Forms;
-using System.IO;
+
 namespace IForce
 {
     class UpdateProperties
     {
-        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url, CheckedListBox chx)
+        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url,  CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
-                    pw == String.Empty || url == String.Empty ||  chx.SelectedItems.Count == 0)
+                    pw == String.Empty || url == String.Empty || chx.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("One or more fields are empty. Please fill all fields and select a case.");
 
@@ -27,7 +22,7 @@ namespace IForce
                     UserInput.ADDDatabase = db;
                     UserInput.SQLUserName = sqluser;
                     UserInput.Password = pw;
-                    UserInput.IproURL = url;
+                    UserInput.IdentURL = url;
                     
                     success = true;
                 }
@@ -41,13 +36,13 @@ namespace IForce
             return success;
         }
 
-        public bool UpdateSearchInputs(string server, string db, string sqluser, string pw, CheckedListBox chx)
+        public bool UpdateSearchInputs(string server, string db, string sqluser, string pw, string url, CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
-                    pw == String.Empty ||  chx.SelectedItems.Count == 0)
+                    pw == String.Empty || chx.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("One or more fields are empty. Please fill all fields and select a case");
                 }
@@ -57,7 +52,8 @@ namespace IForce
                     UserInput.ADDDatabase = db;
                     UserInput.SQLUserName = sqluser;
                     UserInput.Password = pw;
-                    
+                    UserInput.IdentURL = url;
+
                     success = true;
                 }
 
@@ -78,6 +74,7 @@ namespace IForce
                     pw == String.Empty)
                 {
                     MessageBox.Show("One or more fields are empty. Please fill all fields");
+                    IForce._iforce.btnConnect.Enabled = true;
                 }
                 else
                 {

@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -19,6 +12,7 @@ namespace IForce
         {
             InitializeComponent();
             _iforce = this; //static instance of Form IForce to access rich text box for logging
+            IForceApp.UpdateTextFieldsFromConfig();
         }
         //For logging
         public static IForce _iforce;
@@ -103,6 +97,7 @@ namespace IForce
                                tboxSQLUser.Text,
                                tboxPassword.Text,
                                //tboxResultsID.Text,
+                               tboxURL.Text,
                                chxLstBx1) == true)
                               
             {
@@ -176,9 +171,12 @@ namespace IForce
 
         private void btnResetSettings_Click(object sender, EventArgs e)
         {
-           
-            IForceApp.ResetSettingsToUI();
-
+            try
+            {
+                IForceApp.ResetSettingsToUI();
+            }
+            catch { IForce.Logger("Unable to reset settings. Connect to a case first."); }
+            
         }
 
         private void rchTxtBx1_TextChanged(object sender, EventArgs e)
@@ -225,6 +223,7 @@ namespace IForce
                                tboxDb.Text,
                                tboxSQLUser.Text,
                                tboxPassword.Text,
+                               tboxURL.Text,
                                chxLstBx1) == true)
 
             {

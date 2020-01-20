@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using System.Windows.Forms;
 using System.Web.Script.Serialization;
-using System.Data.SqlClient;
-using System.Net.Http;
 
 
 namespace IForce
@@ -55,29 +50,34 @@ namespace IForce
         {
             try
             {
+                //IForce.Logger("Acquiring access token.");
+                //string postData = _postdata;
+                //byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                ////Make the call
+                //WebRequest request = WebRequest.Create($"{UserInput.IproSvcURL}/auth/connect/token");
+                //request.Method = "POST";
+                //request.ContentType = "application/x-www-form-urlencoded";
+                //request.ContentLength = byteArray.Length;
+                //Stream dataStream = request.GetRequestStream();
+                //dataStream.Write(byteArray, 0, byteArray.Length);
+                //dataStream.Close();
+                //// Get the response.
+                //WebResponse response = request.GetResponse();
+                //dataStream = response.GetResponseStream();
+                //StreamReader reader = new StreamReader(dataStream);
+                //string responseFromServer = reader.ReadToEnd();
+                //JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
+                //var token = jObject.SelectToken("access_token");
+                //Token = token.ToString();
+                //// Clean up the streams.
+                //reader.Close();
+                //dataStream.Close();
+                //response.Close();
+
                 IForce.Logger("Acquiring access token.");
-                string postData = _postdata;
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                //Make the call
-                WebRequest request = WebRequest.Create("https://tst-suptrk034:1125/auth/connect/token");
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-                // Get the response.
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-                JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
-                var token = jObject.SelectToken("access_token");
-                Token = token.ToString();
-                // Clean up the streams.
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                Token = IForceApp._TokenRequest()
+                    .GetAwaiter()
+                    .GetResult();
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace IForce
             {
 
                 IForce.Logger("Nuclues session starting.");
-                WebRequest request = WebRequest.Create("https://tst-suptrk034:1124/api/Session/Start");
+                WebRequest request = WebRequest.Create($"{UserInput.IproSvcURL}api/Session/Start");
                 request.Method = "GET";
                 request.Headers.Add($"Authorization: Bearer {Token}");
 
@@ -120,7 +120,7 @@ namespace IForce
             try
             {
                 IForce.Logger("Review user session starting.");
-                WebRequest request = WebRequest.Create("https://tst-suptrk034:1124/api/ReviewUserSession/StartReviewUserSession/?clientId=ADDWeb&appSessionId=" + SessionID);
+                WebRequest request = WebRequest.Create($"{UserInput.IproSvcURL}api/ReviewUserSession/StartReviewUserSession/?clientId=ADDWeb&appSessionId=" + SessionID);
                 request.Method = "GET";
                 request.Headers.Add($"Authorization: Bearer {Token}");
 
@@ -145,7 +145,7 @@ namespace IForce
             try
             {
                 IForce.Logger($"Setting case context to caseproductenvironmentID: {UserInput.CPEID}.");
-                WebRequest request = WebRequest.Create("https://tst-suptrk034:1124//api//ReviewUserSession//UpdateReviewUserSessionCaseProductEnvironmentId?sessionId=" + ReviewUserSessionID + "&caseProductEnvironmentId=" + UserInput.CPEID);
+                WebRequest request = WebRequest.Create($"{UserInput.IproSvcURL}api/ReviewUserSession/UpdateReviewUserSessionCaseProductEnvironmentId?sessionId=" + ReviewUserSessionID + "&caseProductEnvironmentId=" + UserInput.CPEID);
                 request.Method = "GET";
                 request.Headers.Add($"Authorization: Bearer {Token}");
                 request.Headers.Add($"iprosession: {SessionID}");
@@ -170,7 +170,7 @@ namespace IForce
             try
             {
                 IForce.Logger("Resetting user search cache.");
-                WebRequest request = WebRequest.Create("https://tst-suptrk034//api//Case//OpenCase//?caseId=1&resetUsersSearchCache=true");
+                WebRequest request = WebRequest.Create($"{UserInput.IproURL}api/Case/OpenCase/?caseId=1&resetUsersSearchCache=true");
                 request.Method = "GET";
                 request.Headers.Add($"Authorization: Bearer {Token}");
                 request.Headers.Add($"iprosession: {SessionID}");
@@ -196,7 +196,7 @@ namespace IForce
             try
             {
                 IForce.Logger("Getting authorized search list.");
-                WebRequest request = WebRequest.Create("https://tst-suptrk034//api//SearchHeader//GetAuthorized");
+                WebRequest request = WebRequest.Create($"{UserInput.IproURL}api/SearchHeader/GetAuthorized");
                 request.Method = "GET";
                 request.Headers.Add($"Authorization: Bearer {Token}");
                 request.Headers.Add($"iprosession: {SessionID}");
@@ -228,7 +228,7 @@ namespace IForce
             try
             {   //Make the call
                 string _postdata = "";
-                WebRequest request = WebRequest.Create($"https://tst-suptrk034/api/SearchHistory/SearchDocuments?searchId={searchid}");
+                WebRequest request = WebRequest.Create($"{UserInput.IproURL}api/SearchHistory/SearchDocuments?searchId={searchid}");
                 request.Method = "POST";
                 request.Headers.Add($"iprosession: {SessionID}");
                 request.Headers.Add($"Authorization: Bearer {Token}");
@@ -268,7 +268,7 @@ namespace IForce
         {
             try
             {
-                WebRequest request = WebRequest.Create($"https://tst-suptrk034/api/SearchResults/GetSearchResultDocIds?resultsId={ResultsId}");
+                WebRequest request = WebRequest.Create($"{UserInput.IproURL}api/SearchResults/GetSearchResultDocIds?resultsId={ResultsId}");
                 request.Method = "GET";
                 request.Headers.Add($"iprosession: {SessionID}");
                 request.Headers.Add($"Authorization: Bearer {Token}");
@@ -294,7 +294,7 @@ namespace IForce
 
             try
             {
-                WebRequest request = WebRequest.Create($"https://tst-suptrk034:1124/api/Session/Close/{SessionID}");
+                WebRequest request = WebRequest.Create($"{UserInput.IproSvcURL}api/Session/Close/{SessionID}");
                 request.Method = "GET";
                 request.Headers.Add($"Authorization: Bearer {Token}");
                 Stream dataStream;

@@ -45,6 +45,12 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Nucleus.Cryptography">
+      <HintPath>..\..\unscrambler\unscrambler\bin\Debug\Nucleus.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="Nucleus.Cryptography.Interfaces">
+      <HintPath>..\..\unscrambler\unscrambler\bin\Debug\Nucleus.Cryptography.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="PdfSharp">
       <HintPath>..\..\PDF PAGE COUNT\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
     </Reference>
@@ -55,6 +61,7 @@
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>

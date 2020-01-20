@@ -47,7 +47,7 @@ namespace IForce
             this.lblDatabase = new System.Windows.Forms.Label();
             this.lblSQLUser = new System.Windows.Forms.Label();
             this.lblPassword = new System.Windows.Forms.Label();
-            this.lblIproURL = new System.Windows.Forms.Label();
+            this.lbIdentURL = new System.Windows.Forms.Label();
             this.tboxResultsID = new System.Windows.Forms.TextBox();
             this.lblResults = new System.Windows.Forms.Label();
             this.rchTxtBx1 = new System.Windows.Forms.RichTextBox();
@@ -150,7 +150,6 @@ namespace IForce
             this.tboxServer.Name = "tboxServer";
             this.tboxServer.Size = new System.Drawing.Size(415, 19);
             this.tboxServer.TabIndex = 2;
-            this.tboxServer.Text = "tst-supsql001\\sup16";
             // 
             // tboxDb
             // 
@@ -162,7 +161,6 @@ namespace IForce
             this.tboxDb.Name = "tboxDb";
             this.tboxDb.Size = new System.Drawing.Size(415, 19);
             this.tboxDb.TabIndex = 3;
-            this.tboxDb.Text = "mja_add_34";
             // 
             // tboxSQLUser
             // 
@@ -174,7 +172,6 @@ namespace IForce
             this.tboxSQLUser.Name = "tboxSQLUser";
             this.tboxSQLUser.Size = new System.Drawing.Size(415, 19);
             this.tboxSQLUser.TabIndex = 4;
-            this.tboxSQLUser.Text = "mavakiansql";
             // 
             // tboxPassword
             // 
@@ -187,7 +184,6 @@ namespace IForce
             this.tboxPassword.PasswordChar = '*';
             this.tboxPassword.Size = new System.Drawing.Size(415, 19);
             this.tboxPassword.TabIndex = 5;
-            this.tboxPassword.Text = "iprotech";
             // 
             // tboxURL
             // 
@@ -199,7 +195,6 @@ namespace IForce
             this.tboxURL.Name = "tboxURL";
             this.tboxURL.Size = new System.Drawing.Size(415, 19);
             this.tboxURL.TabIndex = 6;
-            this.tboxURL.Text = "https://tst-suptrk034:1125";
             // 
             // lblServer
             // 
@@ -237,14 +232,14 @@ namespace IForce
             this.lblPassword.TabIndex = 12;
             this.lblPassword.Text = "SQL Password";
             // 
-            // lblIproURL
+            // lbIdentURL
             // 
-            this.lblIproURL.AutoSize = true;
-            this.lblIproURL.Location = new System.Drawing.Point(6, 141);
-            this.lblIproURL.Name = "lblIproURL";
-            this.lblIproURL.Size = new System.Drawing.Size(76, 13);
-            this.lblIproURL.TabIndex = 13;
-            this.lblIproURL.Text = "Ipro Web URL";
+            this.lbIdentURL.AutoSize = true;
+            this.lbIdentURL.Location = new System.Drawing.Point(6, 141);
+            this.lbIdentURL.Name = "lbIdentURL";
+            this.lbIdentURL.Size = new System.Drawing.Size(100, 13);
+            this.lbIdentURL.TabIndex = 13;
+            this.lbIdentURL.Text = "Identity Server URL";
             // 
             // tboxResultsID
             // 
@@ -500,7 +495,7 @@ namespace IForce
             this.Controls.Add(this.chxLstBx1);
             this.Controls.Add(this.rchTxtBx1);
             this.Controls.Add(this.lblResults);
-            this.Controls.Add(this.lblIproURL);
+            this.Controls.Add(this.lbIdentURL);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.lblSQLUser);
             this.Controls.Add(this.lblDatabase);
@@ -535,16 +530,16 @@ namespace IForce
         public System.Windows.Forms.Button btnLaunch;
         public System.Windows.Forms.Button btnConnect;
         public System.Windows.Forms.DataGridView dView1;
-        private System.Windows.Forms.TextBox tboxServer;
-        private System.Windows.Forms.TextBox tboxDb;
-        private System.Windows.Forms.TextBox tboxSQLUser;
-        private System.Windows.Forms.TextBox tboxPassword;
-        private System.Windows.Forms.TextBox tboxURL;
+        public System.Windows.Forms.TextBox tboxServer;
+        public System.Windows.Forms.TextBox tboxDb;
+        public System.Windows.Forms.TextBox tboxSQLUser;
+        public System.Windows.Forms.TextBox tboxPassword;
+        public System.Windows.Forms.TextBox tboxURL;
         private System.Windows.Forms.Label lblServer;
         private System.Windows.Forms.Label lblDatabase;
         private System.Windows.Forms.Label lblSQLUser;
         private System.Windows.Forms.Label lblPassword;
-        private System.Windows.Forms.Label lblIproURL;
+        private System.Windows.Forms.Label lbIdentURL;
         public System.Windows.Forms.TextBox tboxResultsID;
         private System.Windows.Forms.Label lblResults;
         public System.Windows.Forms.Button btnAPISearch;
