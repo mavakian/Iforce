@@ -491,6 +491,7 @@ namespace IForce
 
         public static bool CheckForExistingImages()
         {
+            IForce.Logger("Checking for existing images.");
             bool okToContinue = false;
             DataTable ResultsTable;
             DataTable srch = new DataTable();
