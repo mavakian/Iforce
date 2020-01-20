@@ -81,7 +81,7 @@ namespace IForce
             this.btnLaunch.Location = new System.Drawing.Point(9, 528);
             this.btnLaunch.Name = "btnLaunch";
             this.btnLaunch.Size = new System.Drawing.Size(439, 109);
-            this.btnLaunch.TabIndex = 0;
+            this.btnLaunch.TabIndex = 10;
             this.btnLaunch.Text = "Image Document Set";
             this.btnLaunch.UseVisualStyleBackColor = false;
             this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
@@ -138,7 +138,7 @@ namespace IForce
             this.dView1.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Gray;
             this.dView1.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.Black;
             this.dView1.Size = new System.Drawing.Size(567, 179);
-            this.dView1.TabIndex = 1;
+            this.dView1.TabIndex = 16;
             // 
             // tboxServer
             // 
@@ -149,7 +149,7 @@ namespace IForce
             this.tboxServer.Location = new System.Drawing.Point(152, 33);
             this.tboxServer.Name = "tboxServer";
             this.tboxServer.Size = new System.Drawing.Size(415, 19);
-            this.tboxServer.TabIndex = 2;
+            this.tboxServer.TabIndex = 1;
             // 
             // tboxDb
             // 
@@ -160,7 +160,7 @@ namespace IForce
             this.tboxDb.Location = new System.Drawing.Point(152, 59);
             this.tboxDb.Name = "tboxDb";
             this.tboxDb.Size = new System.Drawing.Size(415, 19);
-            this.tboxDb.TabIndex = 3;
+            this.tboxDb.TabIndex = 2;
             // 
             // tboxSQLUser
             // 
@@ -171,7 +171,7 @@ namespace IForce
             this.tboxSQLUser.Location = new System.Drawing.Point(152, 85);
             this.tboxSQLUser.Name = "tboxSQLUser";
             this.tboxSQLUser.Size = new System.Drawing.Size(415, 19);
-            this.tboxSQLUser.TabIndex = 4;
+            this.tboxSQLUser.TabIndex = 3;
             // 
             // tboxPassword
             // 
@@ -183,7 +183,8 @@ namespace IForce
             this.tboxPassword.Name = "tboxPassword";
             this.tboxPassword.PasswordChar = '*';
             this.tboxPassword.Size = new System.Drawing.Size(415, 19);
-            this.tboxPassword.TabIndex = 5;
+            this.tboxPassword.TabIndex = 4;
+            this.tboxPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tboxPassword_KeyDown);
             // 
             // tboxURL
             // 
@@ -194,7 +195,7 @@ namespace IForce
             this.tboxURL.Location = new System.Drawing.Point(152, 136);
             this.tboxURL.Name = "tboxURL";
             this.tboxURL.Size = new System.Drawing.Size(415, 19);
-            this.tboxURL.TabIndex = 6;
+            this.tboxURL.TabIndex = 5;
             // 
             // lblServer
             // 
@@ -271,7 +272,7 @@ namespace IForce
             this.rchTxtBx1.Name = "rchTxtBx1";
             this.rchTxtBx1.ReadOnly = true;
             this.rchTxtBx1.Size = new System.Drawing.Size(567, 243);
-            this.rchTxtBx1.TabIndex = 21;
+            this.rchTxtBx1.TabIndex = 12;
             this.rchTxtBx1.Text = "";
             this.rchTxtBx1.WordWrap = false;
             this.rchTxtBx1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rchTxtBx1_LinkClicked);
@@ -288,7 +289,7 @@ namespace IForce
             this.chxLstBx1.Name = "chxLstBx1";
             this.chxLstBx1.Size = new System.Drawing.Size(415, 255);
             this.chxLstBx1.Sorted = true;
-            this.chxLstBx1.TabIndex = 22;
+            this.chxLstBx1.TabIndex = 7;
             this.chxLstBx1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chxLstBx1_ItemCheck);
             // 
             // btnConnect
@@ -303,7 +304,7 @@ namespace IForce
             this.btnConnect.Location = new System.Drawing.Point(152, 161);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(415, 23);
-            this.btnConnect.TabIndex = 23;
+            this.btnConnect.TabIndex = 6;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = false;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
@@ -320,7 +321,7 @@ namespace IForce
             this.btnImport.Location = new System.Drawing.Point(454, 528);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(113, 109);
-            this.btnImport.TabIndex = 26;
+            this.btnImport.TabIndex = 11;
             this.btnImport.Text = "Import Images";
             this.btnImport.UseVisualStyleBackColor = false;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -364,7 +365,7 @@ namespace IForce
             this.rchTxtBx2.Location = new System.Drawing.Point(573, 282);
             this.rchTxtBx2.Name = "rchTxtBx2";
             this.rchTxtBx2.Size = new System.Drawing.Size(567, 170);
-            this.rchTxtBx2.TabIndex = 33;
+            this.rchTxtBx2.TabIndex = 14;
             this.rchTxtBx2.Text = "";
             this.rchTxtBx2.WordWrap = false;
             this.rchTxtBx2.TextChanged += new System.EventHandler(this.rchTxtBx2_TextChanged);
@@ -379,7 +380,7 @@ namespace IForce
             this.btnResetSettings.Location = new System.Drawing.Point(1070, 404);
             this.btnResetSettings.Name = "btnResetSettings";
             this.btnResetSettings.Size = new System.Drawing.Size(43, 19);
-            this.btnResetSettings.TabIndex = 35;
+            this.btnResetSettings.TabIndex = 15;
             this.btnResetSettings.Text = "Reset";
             this.btnResetSettings.UseVisualStyleBackColor = false;
             this.btnResetSettings.Click += new System.EventHandler(this.btnResetSettings_Click);
@@ -395,7 +396,7 @@ namespace IForce
             this.btnAPISearch.Location = new System.Drawing.Point(501, 458);
             this.btnAPISearch.Name = "btnAPISearch";
             this.btnAPISearch.Size = new System.Drawing.Size(66, 19);
-            this.btnAPISearch.TabIndex = 36;
+            this.btnAPISearch.TabIndex = 9;
             this.btnAPISearch.Text = "Search";
             this.btnAPISearch.UseVisualStyleBackColor = false;
             this.btnAPISearch.Click += new System.EventHandler(this.APISearch_Click_1);
@@ -428,7 +429,7 @@ namespace IForce
             this.btnSaveLog.Location = new System.Drawing.Point(1070, 226);
             this.btnSaveLog.Name = "btnSaveLog";
             this.btnSaveLog.Size = new System.Drawing.Size(43, 19);
-            this.btnSaveLog.TabIndex = 39;
+            this.btnSaveLog.TabIndex = 13;
             this.btnSaveLog.Text = "Save";
             this.btnSaveLog.UseVisualStyleBackColor = false;
             this.btnSaveLog.Click += new System.EventHandler(this.btnSaveLog_Click);
@@ -461,8 +462,9 @@ namespace IForce
             this.tbxSearchName.Location = new System.Drawing.Point(152, 458);
             this.tbxSearchName.Name = "tbxSearchName";
             this.tbxSearchName.Size = new System.Drawing.Size(343, 19);
-            this.tbxSearchName.TabIndex = 42;
+            this.tbxSearchName.TabIndex = 8;
             this.tbxSearchName.Text = "001";
+            this.tbxSearchName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbxSearchName_KeyDown);
             // 
             // pictureBox2
             // 

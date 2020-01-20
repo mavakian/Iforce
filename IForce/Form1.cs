@@ -236,6 +236,24 @@ namespace IForce
             IForceApp.SaveLog();
         }
 
+        private void tboxPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnConnect.PerformClick();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
 
+        private void tbxSearchName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnAPISearch.PerformClick();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }

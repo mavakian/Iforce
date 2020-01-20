@@ -123,8 +123,6 @@ namespace IForce
             row = tbl.Select("Descr = 'EclipseWebService'");
             UserInput.IproURL = row[0]["Endpoint"].ToString();
 
-
-
         }
 
         public static void GetEcapconfig()
@@ -199,7 +197,6 @@ namespace IForce
             Results.Connection.Close();
             dview1.DataSource = res;
             CopyAndRenameFiles(res, rchbx1);
-
             //UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
             //ResetSettingsToUI();
             UserInput.AcquiredToken = _TokenRequest().GetAwaiter().GetResult();
