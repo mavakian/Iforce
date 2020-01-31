@@ -297,7 +297,11 @@ namespace IForce
                 .GetAwaiter().GetResult();
 
                 var accessToken = tokenResponse.AccessToken;
-                IForce.Logger("Token Acquired.");
+                if (accessToken != null)
+                {
+                    IForce.Logger("Token Acquired.");
+                }
+
                 return accessToken;
             }
             catch (Exception ex)
@@ -437,8 +441,8 @@ namespace IForce
         }
         public static void JobStatusCheck()
         {
-            IForce.Logger("Checking Job Status...");
-            WebRequest request = WebRequest.Create(WebRequests.getJobDetails(UserInput.JobID));
+           // IForce.Logger("Checking Job Status..." + WebRequests.getJobDetails(UserInput.IproURL, UserInput.JobID));
+            WebRequest request = WebRequest.Create(WebRequests.getJobDetails(UserInput.IdentURL, UserInput.JobID));
             request.Method = "GET";
             request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
             request.ContentType = "application/x-www-form-urlencoded";
