@@ -79,6 +79,7 @@ namespace IForce
                                tboxSQLUser.Text,
                                tboxPassword.Text,
                                tboxURL.Text,
+                               tbxSearchName.Text,
                                chxLstBx1) == true)
             {
                 IForceApp.ConnectToImage(dView1, rchTxtBx1);
@@ -89,22 +90,37 @@ namespace IForce
 
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private void APISearch_Click_1(object sender, EventArgs e)
         {
             UpdateProperties SetInputs = new UpdateProperties();
             if (SetInputs.UpdateSearchInputs(tboxServer.Text,
                                tboxDb.Text,
                                tboxSQLUser.Text,
                                tboxPassword.Text,
-                               //tboxResultsID.Text,
                                tboxURL.Text,
                                chxLstBx1) == true)
-                              
+
             {
-                //IForceApp.Search(dView1);
+                IForceApp.ExecuteEclipseSearch();
             };
-                   
         }
+
+        //private void btnSearch_Click(object sender, EventArgs e)
+        //{
+        //    UpdateProperties SetInputs = new UpdateProperties();
+        //    if (SetInputs.UpdateSearchInputs(tboxServer.Text,
+        //                       tboxDb.Text,
+        //                       tboxSQLUser.Text,
+        //                       tboxPassword.Text,
+        //                       //tboxResultsID.Text,
+        //                       tboxURL.Text,
+        //                       chxLstBx1) == true)
+                              
+        //    {
+        //        //IForceApp.Search(dView1);
+        //    };
+                   
+        //}
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -216,20 +232,7 @@ namespace IForce
             
         }
 
-        private void APISearch_Click_1(object sender, EventArgs e)
-        {
-            UpdateProperties SetInputs = new UpdateProperties();
-            if (SetInputs.UpdateSearchInputs(tboxServer.Text,
-                               tboxDb.Text,
-                               tboxSQLUser.Text,
-                               tboxPassword.Text,
-                               tboxURL.Text,
-                               chxLstBx1) == true)
 
-            {
-                IForceApp.ExecuteEclipseSearch();
-            }; 
-        }
 
         private void btnSaveLog_Click(object sender, EventArgs e)
         {

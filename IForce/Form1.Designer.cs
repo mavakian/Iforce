@@ -129,7 +129,6 @@ namespace IForce
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dView1.RowHeadersVisible = false;
-            this.dView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
             this.dView1.RowsDefaultCellStyle = dataGridViewCellStyle4;

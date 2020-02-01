@@ -5,13 +5,13 @@ namespace IForce
 {
     class UpdateProperties
     {
-        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url,  CheckedListBox chx)
+        public bool UpdateUserInputs(string server, string db, string sqluser, string pw, string url, string srchName, CheckedListBox chx)
         {
             bool success = false;
             try
             {
                 if (server == String.Empty || db == String.Empty || sqluser == String.Empty ||
-                    pw == String.Empty || url == String.Empty || chx.SelectedItems.Count == 0)
+                    pw == String.Empty || url == String.Empty || srchName == String.Empty ||chx.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("One or more fields are empty. Please fill all fields and select a case.");
 
@@ -23,7 +23,8 @@ namespace IForce
                     UserInput.SQLUserName = sqluser;
                     UserInput.Password = pw;
                     UserInput.IdentURL = url;
-                    
+                    UserInput.SearchName = srchName;
+
                     success = true;
                 }
 

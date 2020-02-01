@@ -33,7 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>new_swat_logo.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>IForce.Program</StartupObject>
@@ -139,7 +140,6 @@
     <None Include="Resources\swat-new.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="new_swat_logo.ico" />
     <None Include="Resources\new-swat-logo2.png" />
     <Content Include="Resources\new_swat_logo.ico" />
     <None Include="Resources\swat47px.png" />

@@ -177,7 +177,7 @@ namespace IForce
         }
         public static void ResetSettingsToUI()
         {
-            WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath);
+            WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath, UserInput.SearchName, UserInput.CaseName, UserInput.CPEID);
             IForce._iforce.rchTxtBx2.Text = UserInput.StartJobRequest;
         }
         public static void ResetSettingsToUiOnly()
@@ -216,6 +216,8 @@ namespace IForce
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
                 UserInput.DocCount = srch.Rows.Count;
+
+
                 dview1.DataSource = srch;
                 IForce._iforce.lblCount.Text = UserInput.DocCount.ToString();
             }
