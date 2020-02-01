@@ -54,12 +54,12 @@ namespace IForce
         {
             DataTable srch = new DataTable();
             WebWork srchresult = new WebWork();            
-            OpenSQL Results = new OpenSQL(UserInput.GetDocids(UserInput.UserID, Convert.ToInt32(srchresult.ResultsId)));
+            OpenSQL sqlConn = new OpenSQL(UserInput.GetDocids(UserInput.UserID, Convert.ToInt32(srchresult.ResultsId)));
             try
             {
-                Results.Connection.Open();
-                srch.Load(Results.Cmd.ExecuteReader());
-                Results.Connection.Close();
+                sqlConn.Connection.Open();
+                srch.Load(sqlConn.Cmd.ExecuteReader());
+                sqlConn.Connection.Close();
                 ResultsTable = srch;
             }
             catch (Exception ex)

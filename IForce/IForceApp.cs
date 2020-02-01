@@ -185,7 +185,6 @@ namespace IForce
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
         }
-
         public static void Search(DataGridView dview1, int userId, int resultsId)
         {
             DataTable srch = new DataTable();
@@ -204,7 +203,6 @@ namespace IForce
                 MessageBox.Show(ex.Message);
             }            
         }
-
         internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
         {           
             var docInfos = new List<DocInfo>();
