@@ -33,11 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>new_swat_logoIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>IForce.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IdentityModel, Version=4.1.1.0, Culture=neutral, PublicKeyToken=e7877f4675df049f, processorArchitecture=MSIL">
@@ -141,8 +144,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\new-swat-logo2.png" />
-    <Content Include="Resources\new_swat_logo.ico" />
     <None Include="Resources\swat47px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="new_swat_logoIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

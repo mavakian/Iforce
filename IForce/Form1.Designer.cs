@@ -93,7 +93,6 @@ namespace IForce
             this.dView1.AllowUserToOrderColumns = true;
             this.dView1.AllowUserToResizeRows = false;
             this.dView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.dView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;

@@ -76,7 +76,7 @@ namespace IForce
         public static string GetDocids(int userId, int resultsId)
         {
             string sqlqry = $"SELECT R1.DocId, BEGDOC, Native, NativeFileExtension " +
-                            $"FROM[UserTables].[SearchResults{userId}] R1 " +
+                            $"FROM [UserTables].[SearchResults{userId}] R1 " +
                             $"JOIN vDocumentFields DF  WITH(NOLOCK) ON DF.DocId = R1.DocId " +
                             $"WHERE RESULTSID IN ({resultsId})";
             return sqlqry;
