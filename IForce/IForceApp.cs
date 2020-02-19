@@ -349,7 +349,7 @@ namespace IForce
         public static bool importStarted;
         private static void SetTimer()
         {
-            // Create a timer with a two second interval.
+            // Create a timer with a 7 second interval.
             aTimer = new System.Timers.Timer(7000);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
@@ -416,9 +416,10 @@ namespace IForce
             }
         }
         public static bool CheckForExistingImages()
-        {
+        { 
             IForce.Logger("Checking for existing images.");
             bool okToContinue = false;
+            int rows;
             DataTable ResultsTable;
             DataTable srch = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.CheckForExistingImages());
@@ -428,17 +429,40 @@ namespace IForce
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
                 ResultsTable = srch;
-                var hasimages = ResultsTable.AsEnumerable().Take(5);
-                var hasimages100 = ResultsTable.AsEnumerable().Take(100);
-                if (ResultsTable.Rows.Count > 0)
+                rows = ResultsTable.Rows.Count;
+                if (rows > 0)
                 {
                     IForce._iforce.btnLaunch.Enabled = false;
-                    MessageBox.Show("Images already exist. Delete pages in search and try again" );
                     IForce.Logger("Images already exist.");
-                    return okToContinue;
+                    var Result = MessageBox.Show("Images already exist. Delete existing images and continue?", "Warning!" ,MessageBoxButtons.YesNo);
+                    if(Result == DialogResult.No)
+                    {
+                        okToContinue = false;
+                        return okToContinue;
+                        
+                    }
+                    else if(Result == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            OpenSQL DeletePages = new OpenSQL(UserInput.DeleteImagesInSearch());
+                            DeletePages.Connection.Open();
+                            DeletePages.Cmd.ExecuteNonQuery();
+                            DeletePages.Connection.Close();
+                            IForce.Logger($"Pages deleted: {rows}");
+                            okToContinue = true;
+                            return okToContinue;
+                        }
+                        catch
+                        {
+                           IForce.Logger("Unabe to delete existing images");
+                           okToContinue = false;
+                           return okToContinue;
+                        }
+                    }
+                    
                 }
-                okToContinue = true;
-                return okToContinue;
+                return okToContinue = true;
             }
             catch (Exception ex)
             {
@@ -446,6 +470,8 @@ namespace IForce
                 return okToContinue;
             }            
         }
+
+        
         //end of IForceAPP class
     }
     public class DocumentIterator
