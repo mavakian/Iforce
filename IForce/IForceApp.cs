@@ -21,7 +21,6 @@ namespace IForce
 {
     partial class IForceApp
     {
-
         //Program
         public static void UpdateTextFieldsFromConfig()
         {
@@ -35,13 +34,10 @@ namespace IForce
             }
             catch { }
         }
-
         public static void GetDatabaseList(CheckedListBox chxLstBx1)
-        {
-           
+        {           
             try
-            {
-                
+            {                
                 OpenSQL Results = new OpenSQL(UserInput.GetCaseName(), UserInput.ADDDatabase);
                 Results.Connection.Open();
                 SqlDataReader reader = Results.Cmd.ExecuteReader();
@@ -60,7 +56,6 @@ namespace IForce
                 IForce._iforce.btnConnect.Enabled = true;
             }
         }
-
         public static void SetCaseName(CheckedListBox chxLstBx1, ItemCheckEventArgs e)
         {
             if (chxLstBx1.CheckedItems.Count == 0)
@@ -82,7 +77,6 @@ namespace IForce
                 chxLstBx1.ClearSelected();
             }
         }
-
         public static void GetCaseDetails()
         {
             OpenSQL Results = new OpenSQL(UserInput.GetCaseDetails(), UserInput.ADDDatabase);
@@ -94,16 +88,17 @@ namespace IForce
                 UserInput.CaseName = reader.GetValue(1).ToString();
                 UserInput.CaseDataase = reader.GetValue(2).ToString();
                 UserInput.CaseDir = reader.GetValue(3).ToString();
-                UserInput.OutputPath = reader.GetValue(3).ToString() + @"\Images\API\";
-                
-
+                string path = UserInput.CaseDir;
+                path.Trim();
+                if (!path.EndsWith("\\")) path += "\\";
+                UserInput.OutputPath = Path.Combine(path, @"Images\API\");                
             }
             reader.Close();
             Results.Connection.Close();
-                IForce.Logger("CPEID: "+UserInput.CPEID);
-                IForce.Logger("CaseName: " + UserInput.CaseName);
-                IForce.Logger("CaseDatabase: " + UserInput.CaseDataase);
-                IForce.Logger("Case Directory: " + UserInput.CaseDir);
+            IForce.Logger("CPEID: "+UserInput.CPEID);
+            IForce.Logger("CaseName: " + UserInput.CaseName);
+            IForce.Logger("CaseDatabase: " + UserInput.CaseDataase);
+            IForce.Logger("Case Directory: " + UserInput.CaseDir);
             GetInstalledComponents();
             GetEcapconfig();
             GetIntegrationDir();
@@ -122,9 +117,7 @@ namespace IForce
             UserInput.IproSvcURL = row[0]["Endpoint"].ToString();
             row = tbl.Select("Descr = 'EclipseWebService'");
             UserInput.IproURL = row[0]["Endpoint"].ToString();
-
         }
-
         public static void GetEcapconfig()
         {   
             OpenSQL Results = new OpenSQL(UserInput.GetEcapConfig(), UserInput.ADDDatabase);
@@ -136,25 +129,23 @@ namespace IForce
             }
             reader.Close();
             Results.Connection.Close();
-                IForce.Logger("EcapConfig Database Name: " + UserInput.EcapConfig);
-            
+            IForce.Logger("EcapConfig Database Name: " + UserInput.EcapConfig);            
         }
-
         public static void GetIntegrationDir()
         {
             OpenSQL Results = new OpenSQL(UserInput.GetIntegrationDir(), UserInput.EcapConfig);
             Results.Connection.Open();
             SqlDataReader reader = Results.Cmd.ExecuteReader();
             while (reader.Read())
-            {
-                UserInput.IntegrationDir = reader.GetValue(0).ToString();
-                UserInput.SourcePath = UserInput.IntegrationDir + @"Natives\";
-
+            {   string str = reader.GetValue(0).ToString();
+                str.Trim();
+                if (!str.EndsWith("\\")) str += "\\"; 
+                UserInput.IntegrationDir = str;
+                UserInput.SourcePath = Path.Combine(UserInput.IntegrationDir, @"Natives\");
             }
             reader.Close();
             Results.Connection.Close();
-                IForce.Logger("Integration Directory: " + UserInput.IntegrationDir);
-            
+            IForce.Logger("Integration Directory: " + UserInput.IntegrationDir);            
         }
         public static int GetUserKey()
         {
@@ -187,8 +178,6 @@ namespace IForce
         }
         public static void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
         {
-            //UserInput.SetPaths();
-            //ResetSettingsToUI();
             IForce.Logger("Native File Copy In Progress: " + UserInput.SourcePath);
             DataTable res = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.GetDocids(UserInput.UserID, UserInput.ResultsID));
@@ -197,17 +186,12 @@ namespace IForce
             Results.Connection.Close();
             dview1.DataSource = res;
             CopyAndRenameFiles(res, rchbx1);
-            //UserInput.OutputPath = UserInput.CaseDir + @"\Images\API\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + @"\";
-            //ResetSettingsToUI();
             UserInput.AcquiredToken = _TokenRequest().GetAwaiter().GetResult();
-            //TokenRequest(WebRequests.authenticateRequest(), rchbx1);
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
         }
-
         public static void Search(DataGridView dview1, int userId, int resultsId)
         {
-            
             DataTable srch = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.GetDocids(userId, resultsId));
             try
@@ -216,33 +200,25 @@ namespace IForce
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
                 UserInput.DocCount = srch.Rows.Count;
-
-
                 dview1.DataSource = srch;
                 IForce._iforce.lblCount.Text = UserInput.DocCount.ToString();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-            
+            }            
         }
-
         internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
-        {
-           
+        {           
             var docInfos = new List<DocInfo>();
             var errordocs = new List<string>();
-
             foreach (DataRow row in _res.Rows)
             {
                 var docInfo = new DocInfo((int)row["DocID"], (string)row["BEGDOC"], (string)row["Native"], (string)row["NativeFileExtension"]);
                 docInfos.Add(docInfo);
             }
-
             Parallel.ForEach(docInfos, x =>
-            {
-                
+            {                
                 try
                 {
                     //FileName changing and copy goes in here x is each docInfo
@@ -256,20 +232,20 @@ namespace IForce
                     fileInfo.CopyTo(destFileName);
                 }
                 catch{errordocs.Add(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
-            });
-
-            IForce.Logger("ERRORS:");
-
-            foreach(string doc in errordocs)
+            });            
+            if(errordocs.Count > 0)
             {
-                IForce.ListLogger(doc);
+                foreach (string doc in errordocs)
+                {
+                    IForce.Logger("ERRORS:");
+                    IForce.ListLogger(doc);
+                }
             }
-            
-
-
+            else
+            {
+                IForce.Logger("All files copied successfully.");
+            }           
         }
-
-
         public static async Task<string> _TokenRequest()
         {
             try
@@ -288,7 +264,6 @@ namespace IForce
                 var discoveryDocument = client.GetDiscoveryDocumentAsync(discoveryRequest).GetAwaiter().GetResult();
                 if (discoveryDocument.IsError) throw new Exception(discoveryDocument.Error);
                 var tokenEndpoint = discoveryDocument.TokenEndpoint;
-
                 var tokenResponse = client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest //requests the token
                 {
                     Address = tokenEndpoint,
@@ -297,13 +272,11 @@ namespace IForce
                     Scope = "ipro.api ipro.superadmin"
                 })
                 .GetAwaiter().GetResult();
-
                 var accessToken = tokenResponse.AccessToken;
                 if (accessToken != null)
                 {
                     IForce.Logger("Token Acquired.");
                 }
-
                 return accessToken;
             }
             catch (Exception ex)
@@ -311,15 +284,12 @@ namespace IForce
                 IForce.Logger(ex.Message);
                 throw;
             }
-
-        }
-     
+        }     
         //public static void TokenRequest(string _postdata, RichTextBox richTextBox)
         //{
         //    try
         //    {
         //        IForce.Logger("Acquiring authorization token.");
-
         //        WebRequest request = WebRequest.Create(UserInput.IproURL + WebRequests.authURLSuffix);
         //        request.Method = "POST";
         //        string postData = _postdata;
@@ -332,10 +302,7 @@ namespace IForce
         //        //get response
         //        WebResponse response = request.GetResponse();
         //        dataStream = response.GetResponseStream();
-
         //        IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusDescription);
-
-
         //        StreamReader reader = new StreamReader(dataStream);
         //        string responseFromServer = reader.ReadToEnd();
         //        JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
@@ -348,17 +315,12 @@ namespace IForce
         //        response.Close();
         //        //Start call for job start
         //        //StartImagingJob(WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath), richTextBox);
-                
-
-
         //    }
         //    catch(Exception ex)
         //    {
         //        IForce.Logger("Token acquisition failed. "+ ex.Message);
-        //    }
-               
+        //    }               
         //}
-
         public static void StartImagingJob(string _postdata, RichTextBox richTextBox)
         {
             try
@@ -375,51 +337,30 @@ namespace IForce
                 dataStream.Write(byteArray, 0, byteArray.Length);
                 dataStream.Close();
                 // Get the response.
-                WebResponse response = request.GetResponse();
-               // dataStream = response.GetResponseStream();
-                
+                WebResponse response = request.GetResponse();                
                 IForce.Logger("Job Creation Response: "+ ((HttpWebResponse)response).StatusDescription);
                 UserInput.Location = ((HttpWebResponse)response).Headers.Get("Location");
-                    //IForce.Logger(UserInput.Location);
-
-
-               // StreamReader reader = new StreamReader(dataStream);
-                // string responseFromServer = reader.ReadToEnd();
-                // IForce.Logger(responseFromServer);
-                // IForce.Logger("Imaging Job available in Job Manager.");
-                // richTextBox.AppendText(responseFromServer);
-
-                //GetJobID()
-                //GetJobStatus()
-                //When Status = Complete Then
-
                 UserInput.JobID = UserInput.Location.Split('/').Last();
                 IForce.Logger("JobID: " + UserInput.JobID);
                 SetTimer();
-
             }
             catch(Exception ex)
             {
                 IForce.Logger("Unable to create imaging Job. " + ex.Message);
-            }
-
-          
+            }          
         }
-
-
         private static System.Timers.Timer aTimer;
         private static string status;
         public static bool importStarted;
         private static void SetTimer()
         {
-            // Create a timer with a two second interval.
+            // Create a timer with a 7 second interval.
             aTimer = new System.Timers.Timer(7000);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
         }
-
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             if (status == "Completed")
@@ -430,35 +371,26 @@ namespace IForce
                     ReadDisk files = new ReadDisk();
                     DocumentIterator importDocs = new DocumentIterator(files.getFilePaths(UserInput.OutputPath));
                     //DocumentIterator.IterateDocuments(ReadDisk.getFilePaths(UserInput.OutputPath));
-                    status = string.Empty;
-                
-                }
-                
+                    status = string.Empty;               
+                }                
             }
             else
             {
                 JobStatusCheck();
-            }
-            
+            }            
         }
         public static void JobStatusCheck()
-        {
-           // IForce.Logger("Checking Job Status..." + WebRequests.getJobDetails(UserInput.IproURL, UserInput.JobID));
+        {           
             WebRequest request = WebRequest.Create(WebRequests.getJobDetails(UserInput.IdentURL, UserInput.JobID));
             request.Method = "GET";
             request.Headers.Add($"authorization: Bearer {UserInput.AcquiredToken}");
             request.ContentType = "application/x-www-form-urlencoded";
-            //request.ContentLength = byteArray.Length;
-            Stream dataStream;// = request.GetRequestStream();
-           // dataStream.Write(byteArray, 0, byteArray.Length);
-           // dataStream.Close();
+            Stream dataStream;
             //get response
             WebResponse response = request.GetResponse();
             dataStream = response.GetResponseStream();
             //MessageBox.Show("WebResponse: " + ((HttpWebResponse)response).StatusCode);
-            IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusCode);
-            
-
+            IForce.Logger("WebResponse: " + ((HttpWebResponse)response).StatusCode);            
             StreamReader reader = new StreamReader(dataStream);
             string responseFromServer = reader.ReadToEnd();
             JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(responseFromServer);
@@ -466,26 +398,20 @@ namespace IForce
             JObject jObjectChild = JObject.Parse(data.ToString());
             var jobStatus = jObjectChild.SelectToken("status");
             string details = jObjectChild.SelectToken("queue").ToString();
-            //MessageBox.Show(jobStatus.ToString()+ jObjectChild.SelectToken("queue").ToString());
             IForce.Logger(jobStatus.ToString() + Environment.NewLine + details);
             // Clean up the streams.
             reader.Close();
             dataStream.Close();
             response.Close();
-            status = jobStatus.ToString();
-            
-
+            status = jobStatus.ToString();            
         }
-
         public static void SaveLog()
         {
             // Create a SaveFileDialog to request a path and file name to save to.
             SaveFileDialog saveFile1 = new SaveFileDialog();
-
-            // Initialize the SaveFileDialog to specify the RTF extension for the file.
+            // Initialize the SaveFileDialog to specify the Txt extension for the file.
             saveFile1.DefaultExt = "*.txt";
             saveFile1.Filter = "TXT Files|*.txt";
-
             // Determine if the user selected a file name from the saveFileDialog.
             if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
                saveFile1.FileName.Length > 0)
@@ -494,11 +420,11 @@ namespace IForce
                 IForce._iforce.rchTxtBx1.SaveFile(saveFile1.FileName, RichTextBoxStreamType.PlainText);
             }
         }
-
         public static bool CheckForExistingImages()
-        {
+        { 
             IForce.Logger("Checking for existing images.");
             bool okToContinue = false;
+            int rows;
             DataTable ResultsTable;
             DataTable srch = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.CheckForExistingImages());
@@ -508,43 +434,58 @@ namespace IForce
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
                 ResultsTable = srch;
-
-                var hasimages = ResultsTable.AsEnumerable().Take(5);
-                var hasimages100 = ResultsTable.AsEnumerable().Take(100);
-
-                if (ResultsTable.Rows.Count > 0)
+                rows = ResultsTable.Rows.Count;
+                if (rows > 0)
                 {
                     IForce._iforce.btnLaunch.Enabled = false;
-                    MessageBox.Show("Images already exist. Delete pages in search and try again" );
                     IForce.Logger("Images already exist.");
-                    return okToContinue;
+                    var Result = MessageBox.Show("Images already exist. Delete existing images and continue?", "Warning!" ,MessageBoxButtons.YesNo);
+                    if(Result == DialogResult.No)
+                    {
+                        okToContinue = false;
+                        return okToContinue;
+                        
+                    }
+                    else if(Result == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            OpenSQL DeletePages = new OpenSQL(UserInput.DeleteImagesInSearch());
+                            DeletePages.Connection.Open();
+                            DeletePages.Cmd.ExecuteNonQuery();
+                            DeletePages.Connection.Close();
+                            IForce.Logger($"Pages deleted: {rows}");
+                            okToContinue = true;
+                            return okToContinue;
+                        }
+                        catch
+                        {
+                           IForce.Logger("Unabe to delete existing images");
+                           okToContinue = false;
+                           return okToContinue;
+                        }
+                    }
+                    
                 }
-                okToContinue = true;
-                return okToContinue;
+                return okToContinue = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return okToContinue;
-            }
-
-            
+            }            
         }
+
+        
         //end of IForceAPP class
-
     }
-
-
-
     public class DocumentIterator
     {
         public DocumentIterator(string[] _path)
         {
             IterateDocuments(_path);
         }
-
         public static DataTable ResultsTable;
-
         public static void BuildDatatable()
         {
             DataTable srch = new DataTable();
@@ -561,20 +502,15 @@ namespace IForce
                 MessageBox.Show(ex.Message);
             }
         }
-
         public static void IterateDocuments(string[] filePaths)
         {
             IForceApp.importStarted = true;
             IForce.Logger("Starting Import...");
-            BuildDatatable();
-            
-
-
+            BuildDatatable();           
             foreach (string file in filePaths)
             {
                 string begdoc = Path.GetFileNameWithoutExtension(file);
-                long filesizeKb = (new FileInfo(file).Length) / 1024;
-               
+                long filesizeKb = (new FileInfo(file).Length) / 1024;               
                 try
                 {
                     using (var sourceDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import))
@@ -602,23 +538,18 @@ namespace IForce
                                 Results.Connection.Close();
                             }
                         }
-
                     }
                 }
                 catch (Exception ex)
                 {
                     IForce.Logger(ex.Message);
                     MessageBox.Show(ex.ToString());
-
                 }
-
             }
-
             IForce.Logger("Import Complete");
             IForce.Logger($"Deleting temporary native file source: {UserInput.SourcePath}");
             DeleteNatives(UserInput.SourcePath);
             IForceApp.importStarted = false;
-
             IForce._iforce.chxLstBx1.Invoke(new MethodInvoker(delegate ()
             {
                 IForce._iforce.chxLstBx1.SetItemCheckState(IForce._iforce.chxLstBx1.SelectedIndex, CheckState.Unchecked);
@@ -628,13 +559,9 @@ namespace IForce
                 IForce._iforce.btnLaunch.Enabled = true;
                 IForce._iforce.btnImport.Enabled = true;
                 IForce._iforce.rchTxtBx2.ReadOnly = false;
-            }));
-            
-
+            }));            
             MessageBox.Show("Done.");
-
         }
-
         public static void DeleteNatives(string path)
         {
             string dir = path;
@@ -646,9 +573,6 @@ namespace IForce
             {
                 IForce.Logger($"Unable to delete temp natives: {path}" + ex.Message);
             }
-
         }
     }
-
-
 }
