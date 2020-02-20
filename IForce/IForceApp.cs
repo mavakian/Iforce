@@ -88,7 +88,10 @@ namespace IForce
                 UserInput.CaseName = reader.GetValue(1).ToString();
                 UserInput.CaseDataase = reader.GetValue(2).ToString();
                 UserInput.CaseDir = reader.GetValue(3).ToString();
-                UserInput.OutputPath = reader.GetValue(3).ToString() + @"\Images\API\";                
+                string path = UserInput.CaseDir;
+                path.Trim();
+                if (!path.EndsWith("\\")) path += "\\";
+                UserInput.OutputPath = Path.Combine(path, @"Images\API\");                
             }
             reader.Close();
             Results.Connection.Close();
@@ -134,9 +137,11 @@ namespace IForce
             Results.Connection.Open();
             SqlDataReader reader = Results.Cmd.ExecuteReader();
             while (reader.Read())
-            {
-                UserInput.IntegrationDir = reader.GetValue(0).ToString();
-                UserInput.SourcePath = UserInput.IntegrationDir + @"Natives\";
+            {   string str = reader.GetValue(0).ToString();
+                str.Trim();
+                if (!str.EndsWith("\\")) str += "\\"; 
+                UserInput.IntegrationDir = str;
+                UserInput.SourcePath = Path.Combine(UserInput.IntegrationDir, @"Natives\");
             }
             reader.Close();
             Results.Connection.Close();
