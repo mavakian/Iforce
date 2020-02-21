@@ -351,7 +351,7 @@ namespace IForce
         }
         private static System.Timers.Timer aTimer;
         private static string status;
-        public static bool importStarted;
+        public static bool importStarted = false;
         private static void SetTimer()
         {
             // Create a timer with a 7 second interval.
@@ -376,7 +376,14 @@ namespace IForce
             }
             else
             {
-                JobStatusCheck();
+                try
+                {
+                    JobStatusCheck();
+                }
+                catch(Exception ex)
+                {
+                    IForce.Logger(ex.Message);
+                }
             }            
         }
         public static void JobStatusCheck()
