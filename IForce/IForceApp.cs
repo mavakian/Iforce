@@ -14,13 +14,13 @@ using System.Timers;
 using System.Net.Http;
 using IdentityModel.Client;
 using System.Configuration;
-
-
+using System.ComponentModel;
 
 namespace IForce
 {
     partial class IForceApp
     {
+  
         //Program
         public static void UpdateTextFieldsFromConfig()
         {
@@ -32,7 +32,7 @@ namespace IForce
                 // IForce._iforce.tboxPassword.Text = ConfigurationManager.AppSettings.Get("Password");
                 IForce._iforce.tboxURL.Text = ConfigurationManager.AppSettings.Get("IproUrl");
             }
-            catch { }
+            catch { IForce.Logger("Unable to read connection info from file."); }
         }
         public static void GetDatabaseList(CheckedListBox chxLstBx1)
         {           
@@ -342,6 +342,7 @@ namespace IForce
                 UserInput.Location = ((HttpWebResponse)response).Headers.Get("Location");
                 UserInput.JobID = UserInput.Location.Split('/').Last();
                 IForce.Logger("JobID: " + UserInput.JobID);
+
                 SetTimer();
             }
             catch(Exception ex)
@@ -349,9 +350,15 @@ namespace IForce
                 IForce.Logger("Unable to create imaging Job. " + ex.Message);
             }          
         }
+        
+
+
+
+
         private static System.Timers.Timer aTimer;
         private static string status;
         public static bool importStarted = false;
+
         private static void SetTimer()
         {
             // Create a timer with a 7 second interval.

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
+using System.Threading;
 
 namespace IForce
 {
@@ -13,6 +13,7 @@ namespace IForce
             InitializeComponent();
             _iforce = this; //static instance of Form IForce to access rich text box for logging
             IForceApp.UpdateTextFieldsFromConfig();
+
         }
         //For logging
         public static IForce _iforce;
