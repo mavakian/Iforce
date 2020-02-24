@@ -208,6 +208,10 @@ namespace IForce
                 MessageBox.Show(ex.Message);
             }            
         }
+
+     
+
+
         internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
         {           
             var docInfos = new List<DocInfo>();
@@ -347,7 +351,7 @@ namespace IForce
             }
             catch(Exception ex)
             {
-                IForce.Logger("Unable to create imaging Job. " + ex.Message);
+                IForce.Logger("Unable to create imaging Job. " + ex.Message);                
             }          
         }
         
@@ -390,6 +394,10 @@ namespace IForce
                 catch(Exception ex)
                 {
                     IForce.Logger(ex.Message);
+                        if(ex.Message == "The remote server returned an error: (401) Unauthorized.")
+                        {
+                            UserInput.AcquiredToken = _TokenRequest().GetAwaiter().GetResult();
+                        }                    
                 }
             }            
         }

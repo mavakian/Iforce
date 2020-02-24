@@ -3,18 +3,65 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Threading;
+using System.ComponentModel;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace IForce
 {
     public partial class IForce : Form
     {
+        public BackgroundWorker worker1; 
         public IForce()
         {
             InitializeComponent();
             _iforce = this; //static instance of Form IForce to access rich text box for logging
             IForceApp.UpdateTextFieldsFromConfig();
+            //this.worker1 = new BackgroundWorker();
+            //this.worker1.DoWork += new DoWorkEventHandler(worker1_DoWork);
+            //this.worker1.ProgressChanged += new ProgressChangedEventHandler(worker1_ProgressChanged);
+            //this.worker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker1_RunWorkerCompleted);
+            //this.worker1.WorkerReportsProgress = true;
 
+            //CopyFileOptions options = new CopyFileOptions()
+            //{
+            //    Dtable = this,
+            //    RchBx = this
+            //};
+            //worker1.RunWorkerAsync(options);
         }
+
+        //private async void ExampleMethod()
+        //{
+        //    await Task.Run(() => AsyncExample());
+        //    //do something else
+        //}
+
+        //private Task AsyncExample()
+        //{
+        //    Task.CompletedTask
+        //}
+
+        //public void worker1_DoWork(object sender, DoWorkEventArgs e)
+        //{
+        //    var options = (CopyFileOptions)sender;
+        //    IForceApp.CopyAndRenameFiles(options.Dtable, options.RchBx);
+        //}l
+
+        //public void worker1_ProgressChanged(object sender, ProgressChangedEventArgs)
+        //{
+        //    var options = (CopyFileOptions)sender;
+        //}
+
+        //public void StartCopyWorker(CopyFileOptions options)
+        //{
+        //    this.worker1 = new BackgroundWorker();
+        //    this.worker1.DoWork += new DoWorkEventHandler(worker1_DoWork);
+        //    this.worker1.ProgressChanged += new ProgressChangedEventHandler(worker1_ProgressChanged);
+        //    //this.worker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker1_RunWorkerCompleted);
+        //    this.worker1.WorkerReportsProgress = true;
+        //    worker1.RunWorkerAsync(options);
+        //}
         //For logging
         public static IForce _iforce;
 
@@ -258,6 +305,11 @@ namespace IForce
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+
         }
     }
 }

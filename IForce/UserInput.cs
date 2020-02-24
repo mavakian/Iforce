@@ -28,6 +28,7 @@ namespace IForce
         public static string Client_ID { get; set; } = "iforce";
         public static string Client_Secret { get; set; } = "iforce";
         public static string AcquiredToken { get; set; }
+        public static string TokenExpIn { get; set; }
         public static string Response { get; set; }
         public static string Request { get; set; }
         public static string Location { get; set; }

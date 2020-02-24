@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CopyFiles.cs" />
     <Compile Include="DocInfo.cs" />
     <Compile Include="EclipseAPI.cs" />
     <Compile Include="Form1.cs">
