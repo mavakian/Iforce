@@ -102,13 +102,19 @@ namespace IForce
             
         }
 
-        //public static void Logger(string text)
-        //{
-        //    _iforce.rchTxtBx1.AppendText(Environment.NewLine + DateTime.Now.ToString() + " " + text);
-        //}
+
         public static void ListLogger(string text)
         {
-            _iforce.rchTxtBx1.AppendText(Environment.NewLine + text);
+            if (_iforce.rchTxtBx1.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(Logger);
+                _iforce.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                _iforce.rchTxtBx1.AppendText(Environment.NewLine + text); 
+            }
+            
         }
 
         private void btnLaunch_Click(object sender, EventArgs e)
@@ -119,6 +125,9 @@ namespace IForce
             chxLstBx1.Enabled = false;
             rchTxtBx2.ReadOnly = true;
             btnLaunch.Enabled = false;
+
+            worker1 = new BackgroundWorker();
+            worker1.DoWork += (obj, ea) => IForceApp.ConnectToImage(dView1, rchTxtBx1);
             
 
             UpdateProperties SetInputs = new UpdateProperties();
@@ -130,12 +139,18 @@ namespace IForce
                                tbxSearchName.Text,
                                chxLstBx1) == true)
             {
-                IForceApp.ConnectToImage(dView1, rchTxtBx1);
+                worker1.RunWorkerAsync();
+                // IForceApp.ConnectToImage(dView1, rchTxtBx1);
 
             };
            
             
 
+        }
+
+        private void Worker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void APISearch_Click_1(object sender, EventArgs e)

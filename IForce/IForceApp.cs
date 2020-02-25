@@ -176,7 +176,7 @@ namespace IForce
             //WebRequests.startJobRequest(UserInput.SourcePath, UserInput.OutputPath);
             IForce._iforce.rchTxtBx2.Text = UserInput.StartJobRequest;
         }
-        public static void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
+        public static async void ConnectToImage(DataGridView dview1, RichTextBox rchbx1)
         {
             IForce.Logger("Native File Copy In Progress: " + UserInput.SourcePath);
             DataTable res = new DataTable();
@@ -184,7 +184,7 @@ namespace IForce
             Results.Connection.Open();
             res.Load(Results.Cmd.ExecuteReader());
             Results.Connection.Close();
-            dview1.DataSource = res;
+            //dview1.DataSource = res;
             CopyAndRenameFiles(res, rchbx1);
             UserInput.AcquiredToken = _TokenRequest().GetAwaiter().GetResult();
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
@@ -212,43 +212,51 @@ namespace IForce
      
 
 
-        internal static void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
-        {           
-            var docInfos = new List<DocInfo>();
-            var errordocs = new List<string>();
-            foreach (DataRow row in _res.Rows)
+        internal static async void CopyAndRenameFiles(DataTable _res, RichTextBox rchbx1)
+        {
+            try
             {
-                var docInfo = new DocInfo((int)row["DocID"], (string)row["BEGDOC"], (string)row["Native"], (string)row["NativeFileExtension"]);
-                docInfos.Add(docInfo);
-            }
-            Parallel.ForEach(docInfos, x =>
-            {                
-                try
+                var docInfos = new List<DocInfo>();
+                var errordocs = new List<string>();
+                foreach (DataRow row in _res.Rows)
                 {
+                    var docInfo = new DocInfo((int)row["DocID"], (string)row["BEGDOC"], (string)row["Native"], (string)row["NativeFileExtension"]);
+                    docInfos.Add(docInfo);
+                }
+                Parallel.ForEach(docInfos, x =>
+                {
+                    try
+                    {
                     //FileName changing and copy goes in here x is each docInfo
                     var fileInfo = new FileInfo(x.Native);
-                    var destFileName = UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1) + "\\" + x.BegDoc + (x.FileExtension.Contains('.') ? x.FileExtension : "." + x.FileExtension);
-                    var dirInfo = new DirectoryInfo(UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1));
-                    if (!dirInfo.Exists)
-                    {
-                        dirInfo.Create();
+                        var destFileName = UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1) + "\\" + x.BegDoc + (x.FileExtension.Contains('.') ? x.FileExtension : "." + x.FileExtension);
+                        var dirInfo = new DirectoryInfo(UserInput.SourcePath + ((docInfos.IndexOf(x) % 1000) + 1));
+                        if (!dirInfo.Exists)
+                        {
+                            dirInfo.Create();
+                        }
+                        fileInfo.CopyTo(destFileName);
                     }
-                    fileInfo.CopyTo(destFileName);
-                }
-                catch{errordocs.Add(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
-            });            
-            if(errordocs.Count > 0)
-            {
-                foreach (string doc in errordocs)
+                    catch { errordocs.Add(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
+                });
+                if (errordocs.Count > 0)
                 {
-                    IForce.Logger("ERRORS:");
-                    IForce.ListLogger(doc);
+                    foreach (string doc in errordocs)
+                    {
+                        IForce.Logger("ERRORS:");
+                        IForce.ListLogger(doc);
+                    }
+                }
+                else
+                {
+                    IForce.Logger("All files copied successfully.");
                 }
             }
-            else
+            catch(Exception ex)
             {
-                IForce.Logger("All files copied successfully.");
-            }           
+                IForce.Logger(ex.Message);
+                return;
+            }
         }
         public static async Task<string> _TokenRequest()
         {
