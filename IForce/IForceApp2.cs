@@ -11,23 +11,27 @@ namespace IForce
     {
         public static void ExecuteEclipseSearch()
         {
+            
             IForce.Logger("Connecting to API and Executing Search. Please wait...");
             WebWork apiSearch = new WebWork();
-            IForce._iforce.lblCount.Text = apiSearch.Count;
-            IForce._iforce.tboxResultsID.Text = apiSearch.ResultsId;
+            //IForce._iforce.lblCount.Text = apiSearch.Count;
+            IForce.srchCount(apiSearch.Count);
+            //IForce._iforce.tboxResultsID.Text = apiSearch.ResultsId;
+            //string resultid = apiSearch.ResultsId;
             IForce.Logger($"Search ResultsID = {apiSearch.ResultsId}");
             int _userKey = GetUserKey();
             if(_userKey > 0)
             {
-                IForce.Logger("Returning sql results.");
-                Search(IForce._iforce.dView1, _userKey, Convert.ToInt32(apiSearch.ResultsId));
-                UserInput.ResultsID = Convert.ToInt32(apiSearch.ResultsId);
+               IForce.Logger("Returning sql results.");
+               Search( _userKey, Convert.ToInt32(apiSearch.ResultsId));
+               UserInput.ResultsID = Convert.ToInt32(apiSearch.ResultsId);
                IForce.Logger($"Documents Returned: {apiSearch.Count}");
                 
                 if (CheckForExistingImages())
                 {
-                    IForce._iforce.btnLaunch.Enabled = true;
+                    
                     IForce.Logger("OK to proceed.");
+                    IForce._iforce.btnLaunch.Enabled = true;
                 }
                 else
                 {

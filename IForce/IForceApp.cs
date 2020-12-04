@@ -190,7 +190,7 @@ namespace IForce
             StartImagingJob(UserInput.StartJobRequest, rchbx1);
             IForce.Logger("Checking Job Status..."); //temp
         }
-        public static void Search(DataGridView dview1, int userId, int resultsId)
+        public static void Search( int userId, int resultsId)
         {
             DataTable srch = new DataTable();
             OpenSQL Results = new OpenSQL(UserInput.GetDocids(userId, resultsId));
@@ -200,8 +200,8 @@ namespace IForce
                 srch.Load(Results.Cmd.ExecuteReader());
                 Results.Connection.Close();
                 UserInput.DocCount = srch.Rows.Count;
-                dview1.DataSource = srch;
-                IForce._iforce.lblCount.Text = UserInput.DocCount.ToString();
+                IForce.dgview(srch);
+                IForce.srchCount(UserInput.DocCount.ToString());
             }
             catch (Exception ex)
             {
@@ -218,10 +218,14 @@ namespace IForce
             {
                 var docInfos = new List<DocInfo>();
                 var errordocs = new List<string>();
+                int i = 0; 
+
                 foreach (DataRow row in _res.Rows)
                 {
+                    
                     var docInfo = new DocInfo((int)row["DocID"], (string)row["BEGDOC"], (string)row["Native"], (string)row["NativeFileExtension"]);
                     docInfos.Add(docInfo);
+                    
                 }
                 Parallel.ForEach(docInfos, x =>
                 {
@@ -236,14 +240,18 @@ namespace IForce
                             dirInfo.Create();
                         }
                         fileInfo.CopyTo(destFileName);
+                        i++;
+                        //ProgressChanged
+                        //IForce.Logger($"Files Coppied: {i}");
                     }
                     catch { errordocs.Add(x.BegDoc); } // rchbx1.AppendText(@"\r\n" + x.BegDoc + " " + ex.Message);
                 });
                 if (errordocs.Count > 0)
                 {
+                    IForce.Logger("ERRORS:");
+
                     foreach (string doc in errordocs)
-                    {
-                        IForce.Logger("ERRORS:");
+                    {                        
                         IForce.ListLogger(doc);
                     }
                 }
@@ -467,7 +475,7 @@ namespace IForce
                 rows = ResultsTable.Rows.Count;
                 if (rows > 0)
                 {
-                    IForce._iforce.btnLaunch.Enabled = false;
+                    UserInput.EnblLaunchBtn = false;
                     IForce.Logger("Images already exist.");
                     var Result = MessageBox.Show("Images already exist. Delete existing images and continue?", "Warning!" ,MessageBoxButtons.YesNo);
                     if(Result == DialogResult.No)
@@ -573,7 +581,7 @@ namespace IForce
                 catch (Exception ex)
                 {
                     IForce.Logger(ex.Message);
-                    MessageBox.Show(ex.ToString());
+                    //MessageBox.Show(ex.ToString());
                 }
             }
             IForce.Logger("Import Complete");

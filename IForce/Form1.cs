@@ -6,64 +6,30 @@ using System.Threading;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace IForce
 {
     public partial class IForce : Form
-    {
-        public BackgroundWorker worker1; 
+    {    
         public IForce()
         {
             InitializeComponent();
             _iforce = this; //static instance of Form IForce to access rich text box for logging
-            IForceApp.UpdateTextFieldsFromConfig();
-            //this.worker1 = new BackgroundWorker();
-            //this.worker1.DoWork += new DoWorkEventHandler(worker1_DoWork);
-            //this.worker1.ProgressChanged += new ProgressChangedEventHandler(worker1_ProgressChanged);
-            //this.worker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker1_RunWorkerCompleted);
-            //this.worker1.WorkerReportsProgress = true;
+            IForceApp.UpdateTextFieldsFromConfig();           
+        }
+        
+        //Static instance of the form For my primitive logging purposes
+        public static IForce _iforce;
 
-            //CopyFileOptions options = new CopyFileOptions()
-            //{
-            //    Dtable = this,
-            //    RchBx = this
-            //};
-            //worker1.RunWorkerAsync(options);
+        //For background worker so UI is reponsive during long ops.
+        public BackgroundWorker worker1;
+        private void Worker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+           Logger(e.ToString() + " of " + UserInput.DocCount);
         }
 
-        //private async void ExampleMethod()
-        //{
-        //    await Task.Run(() => AsyncExample());
-        //    //do something else
-        //}
 
-        //private Task AsyncExample()
-        //{
-        //    Task.CompletedTask
-        //}
-
-        //public void worker1_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    var options = (CopyFileOptions)sender;
-        //    IForceApp.CopyAndRenameFiles(options.Dtable, options.RchBx);
-        //}l
-
-        //public void worker1_ProgressChanged(object sender, ProgressChangedEventArgs)
-        //{
-        //    var options = (CopyFileOptions)sender;
-        //}
-
-        //public void StartCopyWorker(CopyFileOptions options)
-        //{
-        //    this.worker1 = new BackgroundWorker();
-        //    this.worker1.DoWork += new DoWorkEventHandler(worker1_DoWork);
-        //    this.worker1.ProgressChanged += new ProgressChangedEventHandler(worker1_ProgressChanged);
-        //    //this.worker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker1_RunWorkerCompleted);
-        //    this.worker1.WorkerReportsProgress = true;
-        //    worker1.RunWorkerAsync(options);
-        //}
-        //For logging
-        public static IForce _iforce;
 
         //to move the form
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -82,8 +48,10 @@ namespace IForce
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
-
+        // for logging from other threads
         delegate void SetTextCallback(string text);
+        delegate void SetDataCallback(DataTable data);
+
         //End move form
         public static void Logger(string text)
         {
@@ -98,23 +66,44 @@ namespace IForce
                 else
                 {
                    _iforce.rchTxtBx1.AppendText(Environment.NewLine + DateTime.Now.ToString() + " " + text);
-                }
-            
+                }            
         }
-
-
         public static void ListLogger(string text)
         {
             if (_iforce.rchTxtBx1.InvokeRequired)
             {
-                SetTextCallback d = new SetTextCallback(Logger);
+                SetTextCallback d = new SetTextCallback(ListLogger);
                 _iforce.Invoke(d, new object[] { text });
             }
             else
             {
                 _iforce.rchTxtBx1.AppendText(Environment.NewLine + text); 
+            }            
+        }
+        public static void srchCount(string cnt)
+        {
+            if (_iforce.lblCount.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(srchCount);
+                _iforce.Invoke(d, new object[] { cnt });           
             }
-            
+            else
+            {
+                _iforce.lblCount.Text = cnt;
+            }
+        }
+
+        public static void dgview(DataTable data)
+        {
+            if (_iforce.dView1.InvokeRequired)
+            {
+                SetDataCallback d = new SetDataCallback(dgview);
+                _iforce.Invoke(d, new object[] { data });
+            }
+            else
+            {
+                _iforce.dView1.DataSource = data;
+            }
         }
 
         private void btnLaunch_Click(object sender, EventArgs e)
@@ -125,12 +114,9 @@ namespace IForce
             chxLstBx1.Enabled = false;
             rchTxtBx2.ReadOnly = true;
             btnLaunch.Enabled = false;
-
-            worker1 = new BackgroundWorker();
-            worker1.DoWork += (obj, ea) => IForceApp.ConnectToImage(dView1, rchTxtBx1);
             
-
             UpdateProperties SetInputs = new UpdateProperties();
+
             if (SetInputs.UpdateUserInputs(tboxServer.Text,
                                tboxDb.Text,
                                tboxSQLUser.Text,
@@ -139,23 +125,27 @@ namespace IForce
                                tbxSearchName.Text,
                                chxLstBx1) == true)
             {
+                worker1 = new BackgroundWorker();
+                worker1.DoWork += (obj, ea) => IForceApp.ConnectToImage(dView1, rchTxtBx1);
+                worker1.ProgressChanged += Worker1_ProgressChanged;
                 worker1.RunWorkerAsync();
-                // IForceApp.ConnectToImage(dView1, rchTxtBx1);
-
-            };
-           
+            }
+            else
+            {
+                btnLaunch.Enabled = true;
+            }
             
 
         }
 
-        private void Worker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+
 
         private void APISearch_Click_1(object sender, EventArgs e)
         {
             UpdateProperties SetInputs = new UpdateProperties();
+            worker1 = new BackgroundWorker();
+            worker1.DoWork += (obj, ea) => IForceApp.ExecuteEclipseSearch();
+
             if (SetInputs.UpdateSearchInputs(tboxServer.Text,
                                tboxDb.Text,
                                tboxSQLUser.Text,
@@ -164,8 +154,18 @@ namespace IForce
                                chxLstBx1) == true)
 
             {
-                IForceApp.ExecuteEclipseSearch();
+                worker1.RunWorkerAsync();
             };
+
+            //if(UserInput.DocCount == 0)
+            //{
+            //    btnLaunch.Enabled = false;
+            //}
+            //else
+            //{
+            //    btnLaunch.Enabled = true;
+            //}
+            
         }
 
         //private void btnSearch_Click(object sender, EventArgs e)

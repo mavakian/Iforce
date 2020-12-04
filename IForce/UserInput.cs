@@ -40,6 +40,9 @@ namespace IForce
         public static int ResultsID { get; set; } //search resuts id from CaseDB.UserTables.SearchResultsUser[Dim_User.UserID]
         public static string ReviewUsername { get; set; }
         public static int UserID { get; set; }  
+        //enabled buttons
+        public static bool EnblLaunchBtn { get; set; }
+        public static bool EnblSrchBtn { get; set; } 
         
         //Queries
         public static string GetInstalledComponents()
